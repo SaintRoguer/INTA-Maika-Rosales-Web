@@ -43,7 +43,7 @@
     "react-responsive-modal": "^5.2.6",
     "react-swipeable-views": "^0.13.9",
     "swr": "^0.3.11",
-    "webpack": "4.44.1"
+    "webpack": "^4.47.0"
   },
   "eslintConfig": {
     "extends": "react-app"
