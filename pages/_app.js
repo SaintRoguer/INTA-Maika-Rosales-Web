@@ -26,7 +26,7 @@ import PageChange from "components/PageChange/PageChange.js";
 import "assets/css/nextjs-material-dashboard.css?v=1.0.0";
 import { SWRConfig } from "swr";
 
-Router.events.on("routeChangeStart", (url) => {
+/*Router.events.on("routeChangeStart", (url) => {
   document.body.classList.add("body-page-transition");
   ReactDOM.render(
     <PageChange path={url} showText={true} />,
@@ -40,10 +40,10 @@ Router.events.on("routeChangeComplete", () => {
 Router.events.on("routeChangeError", () => {
   ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
   document.body.classList.remove("body-page-transition");
-});
+});*/
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
 
     if (Component.getInitialProps) {
