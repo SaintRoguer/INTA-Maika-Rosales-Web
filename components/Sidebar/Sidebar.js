@@ -88,7 +88,7 @@ export default function Sidebar(props) {
           alt="logo inta"
           width={120}
           height={64}
-          style={{
+          className={{
             flex: "auto",
           }}
           onClick={() =>
@@ -100,7 +100,7 @@ export default function Sidebar(props) {
           alt="logo dcic"
           width={121}
           height={64}
-          style={{
+          className={{
             flex: "auto",
           }}
           onClick={() => window.open("https://cs.uns.edu.ar/home/", "_blank")}
@@ -110,7 +110,7 @@ export default function Sidebar(props) {
           alt="logo uns"
           width={121}
           height={64}
-          style={{
+          className={{
             flex: "auto",
           }}
           onClick={() => window.open("https://www.uns.edu.ar/", "_blank")}

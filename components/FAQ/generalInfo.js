@@ -11,7 +11,7 @@ const dataGeneralInfo = {
       content: (
         <>
           <div
-            style={{
+            className={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -22,7 +22,7 @@ const dataGeneralInfo = {
               alt="logo cgs"
               width={500}
               height={500}
-              style={{
+              className={{
                 width: "60%",
               }}
             />
