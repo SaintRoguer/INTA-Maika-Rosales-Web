@@ -78,7 +78,7 @@ export default function Sidebar(props) {
         target="_blank"
       >
         <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
+          <img src={logo['src']} alt="logo" className={classes.img} />
         </div>
         {logoText}
       </a>
@@ -141,7 +141,7 @@ export default function Sidebar(props) {
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
+              style={{ backgroundImage: "url(" + image['src'] + ")" }}
             />
           ) : null}
         </Drawer>
@@ -160,7 +160,7 @@ export default function Sidebar(props) {
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
+              style={{ backgroundImage: "url(" + image['src'] + ")" }}
             />
           ) : null}
         </Drawer>
@@ -179,8 +179,8 @@ Sidebar.propTypes = {
     "orange",
     "red",
   ]),
-  logo: PropTypes.string,
-  image: PropTypes.string,
+  logo: PropTypes.object,
+  image: PropTypes.object,
   logoText: PropTypes.string,
   routes: PropTypes.arrayOf(PropTypes.object),
   open: PropTypes.bool,

@@ -58,7 +58,7 @@ export default function FixedPlugin(props) {
 }
 
 FixedPlugin.propTypes = {
-  bgImage: PropTypes.string,
+  bgImage: PropTypes.object,
   handleFixedClick: PropTypes.func,
   fixedClasses: PropTypes.string,
   bgColor: PropTypes.oneOf([
