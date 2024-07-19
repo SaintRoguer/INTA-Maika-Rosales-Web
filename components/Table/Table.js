@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 import MaterialTable from "material-table";
 import { optionsConfig, localizationConfig } from "./config/tableConfig";

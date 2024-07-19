@@ -20,6 +20,7 @@ import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
+import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 
 import PageChange from "components/PageChange/PageChange.js";
 
@@ -41,6 +42,7 @@ Router.events.on("routeChangeError", () => {
   ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
   document.body.classList.remove("body-page-transition");
 });*/
+const theme = createTheme();
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -66,18 +68,23 @@ export default class MyApp extends App {
           />
           <title>CGS - Cobertura y gestión de suelos</title>
         </Head>
-        <SWRConfig
-          value={{
-            fetcher: async (...args) => {
-              const res = await fetch(...args);
-              return res.json();
-            },
-          }}
-        >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SWRConfig>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+
+          <SWRConfig
+            value={{
+              fetcher: async (...args) => {
+                const res = await fetch(...args);
+                return res.json();
+              },
+            }}
+          >
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </SWRConfig>
+          </ThemeProvider>
+        </StyledEngineProvider>
       </React.Fragment>
     );
   }

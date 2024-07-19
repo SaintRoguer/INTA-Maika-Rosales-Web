@@ -4,7 +4,7 @@ import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { dataGeneralInfo, styleGeneralInfo } from "./generalInfo";
 import { dataAppInfo, styleAppInfo } from "./mobileAppInfo";
 import { dataWebInfo, styleWebInfo } from "./webInfo";

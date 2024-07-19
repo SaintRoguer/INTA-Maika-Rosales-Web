@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Gallery from "react-grid-gallery";
 import Percentages from "./Percentages";
-import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotes";
+import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes";
 import ImageNoteModal from "../Modal/ImageNoteModal/ImageNoteModal";
 
 export default function SideImageInfo(props) {

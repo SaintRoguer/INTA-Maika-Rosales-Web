@@ -4,20 +4,20 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import LoteImages from "../LoteImages/LoteImages";
 import SideImageInfo from "./SideImageInfo";
 import LotePasturas from "../LotePasturas/LotePasturas";
-import ImageIcon from "@material-ui/icons/Image";
-import ArtTrackIcon from "@material-ui/icons/ArtTrack";
-import AssessmentIcon from "@material-ui/icons/Assessment";
+import ImageIcon from "@mui/icons-material/Image";
+import ArtTrackIcon from "@mui/icons-material/ArtTrack";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import moment from "moment";
 import "moment/locale/es";
 import { updateLote } from "../../lib/db-client";
 import InfoAverage from "./InfoAverage";
-import EditIcon from "@material-ui/icons/Edit";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import EditIcon from "@mui/icons-material/Edit";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditionModal from "../Modal/EditionModal";
 
 const styles = {

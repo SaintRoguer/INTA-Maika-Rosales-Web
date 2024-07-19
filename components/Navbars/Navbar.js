@@ -2,12 +2,12 @@ import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Hidden from "@material-ui/core/Hidden";
-import Menu from "@material-ui/icons/Menu";
+import makeStyles from '@mui/styles/makeStyles';
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Hidden from "@mui/material/Hidden";
+import Menu from "@mui/icons-material/Menu";
 import AdminNavbarLinks from "./AdminNavbarLinks.js";
 import Button from "components/CustomButtons/Button.js";
 
@@ -49,7 +49,7 @@ export default function Header(props) {
             color="inherit"
             aria-label="open drawer"
             onClick={props.handleDrawerToggle}
-          >
+            size="large">
             <Menu />
           </IconButton>
         </Hidden>
