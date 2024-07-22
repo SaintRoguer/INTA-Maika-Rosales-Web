@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import ImageNotesTable from "components/Modal/ImageNoteModal/ImageNotesTable";
 
@@ -9,20 +9,33 @@ const styles = {
 
 export default function ImageNoteModal(props) {
   const [open, setOpen] = React.useState(true);
+  const { onUpdate } = props;
+
 
   const onCloseModal = () => {
     setOpen(false);
     props.onCloseModal();
   };
 
+  const handleUpdateNotes = (data) => {
+    onUpdate(data);
+
+  };
+
   const showNotes = () => {
     if (props.notes && props.notes.length > 0) {
       return (
         <ImageNotesTable
-          tableHead={[{ title: "Nota", field: "noteToDisplay" }]}
+          tableHead={[{ 
+            accessorKey: "noteToDisplay",
+            header: "Nota", 
+            size: "auto" 
+          }
+        ]}
           tableData={props.notes}
           loteDetailId={props.loteDetailId}
           imageNumberInArray={props.imageNumberInArray}
+          onUpdateData={handleUpdateNotes}
         />
       );
     } else {

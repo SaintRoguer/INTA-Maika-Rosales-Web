@@ -16,32 +16,17 @@
 
 */
 import React from "react";
-import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
 import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
+import { esES } from '@mui/material/locale';
 
 import PageChange from "components/PageChange/PageChange.js";
 
 import "assets/css/nextjs-material-dashboard.css?v=1.0.0";
 import { SWRConfig } from "swr";
 
-/*Router.events.on("routeChangeStart", (url) => {
-  document.body.classList.add("body-page-transition");
-  ReactDOM.render(
-    <PageChange path={url} showText={true} />,
-    document.getElementById("page-transition")
-  );
-});
-Router.events.on("routeChangeComplete", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});
-Router.events.on("routeChangeError", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});*/
 const theme = createTheme();
 
 export default class MyApp extends App {
@@ -69,7 +54,7 @@ export default class MyApp extends App {
           <title>CGS - Cobertura y gestión de suelos</title>
         </Head>
         <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={createTheme(theme,esES)}>
 
           <SWRConfig
             value={{

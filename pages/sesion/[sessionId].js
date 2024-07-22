@@ -71,21 +71,21 @@ export async function getStaticProps(context) {
   sessionDetails = JSON.stringify(sessionDetails);
 
   return {
-    props: { sessionDetails }, // will be passed to the page component as props
+    props: { sessionDetails,sessionId }, // will be passed to the page component as props
     revalidate: 1, // In seconds
   };
 }
 
-function SessionDetail({ sessionDetails }) {
+function SessionDetail({ sessionDetails, sessionId }) {
   const classes = useStyles();
   const [showNotes, setShowNotes] = useState(false);
-  const router = useRouter();
+  const router = useRouter();  
 
   if (router.isFallback) return <h3> Cargando... </h3>;
 
   //TODO: Poner esto en un use Effect?
   let sessionDetailsJSON = JSON.parse(sessionDetails);
-
+  const [notesData, setNotesData] = useState(sessionDetailsJSON.notes);
   //Only make request if sessionDetailsJson lotes length > 0 ?
   const { data: dataLotes, error: errorLotes } = useSWR(
     "/api/lotesDetails/" + router.query.sessionId,
@@ -130,6 +130,15 @@ function SessionDetail({ sessionDetails }) {
         </GridItem>
       );
     }
+  };
+
+  const handleOnUpdate = (data) => {
+    const dataArray = Object.values(data);
+    for (let i = 0; i < data.length; i++) {
+      dataArray[i]=data[i].note;
+    }
+    console.log("data", dataArray);
+    setNotesData(dataArray);
   };
 
   return (
@@ -222,8 +231,10 @@ function SessionDetail({ sessionDetails }) {
               setShowNotes(false);
             }}
             title="Notas de la sesión"
-            notes={sessionDetailsJSON.notes}
+            notes={notesData}
             sessionDetailsId={sessionDetailsJSON.id}
+            onUpdate={handleOnUpdate}
+            sessionDetailIDDoc={sessionId}
           />
         ) : (
           ""

@@ -1,56 +1,112 @@
 import React, { useState } from "react";
 import makeStyles from '@mui/styles/makeStyles';
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
-import MaterialTable from "material-table";
 import { optionsConfig, localizationConfig } from "../config/tableConfig";
 import { editNoteFromImage } from "../../../lib/db-client";
+
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import { Box, Button, IconButton, Tooltip } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
+
 
 const useStyles = makeStyles(styles);
 
 export default function ImageNotesTable(props) {
+  const [validationErrors, setValidationErrors] = useState({});
   const classes = useStyles();
-  const { tableHead, tableData, loteDetailId, imageNumberInArray } = props;
+  const { tableHead, tableData, loteDetailId, imageNumberInArray, onUpdateData } = props;
   const [columns, setColumns] = useState(tableHead);
   const [data, setData] = useState(tableData);
 
+   //UPDATE action
+   const handleSaveRow = async ({ row, table,values }) => {
+   
+    const newValidationErrors = validateValue(values);
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;//algun modal o tooltip, mejor tooltip
+    }
+    new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        //Actualizo en firebase
+        if (row.original.noteToDisplay !== values.noteToDisplay) {
+          await editNoteFromImage(
+            loteDetailId,
+            row.original.originalNote,
+            row.original.imageId,
+            imageNumberInArray,
+            values.noteToDisplay
+          );
+        }
+
+        //Actualizo la tabla (en este caso lo hago manual porque el SWR no interviene)
+        const dataUpdate = [...data];
+        const index = row.id;
+        dataUpdate[index].noteToDisplay = values.noteToDisplay;
+
+        setData([...dataUpdate]);
+        onUpdateData(data);
+
+        //TODO: Do something like this to update note at real time?
+        // props.onUpdate(dataUpdate);
+        resolve();
+      }, 1000);
+    }),
+    table.setEditingRow(null); //exit editing mode
+  };
+
+  const table = useMaterialReactTable({
+    columns,
+    data, 
+    localization: MRT_Localization_ES,
+    enableEditing: true,
+    editDisplayMode: 'row',
+    getRowId: (row) => row.id,
+    muiToolbarAlertBannerProps: data
+      ? {
+          color: 'error',
+          children: 'Error loading data',
+        }
+      : undefined,
+    muiTableContainerProps: {
+      sx: {
+        minHeight: '500px',
+      },
+    },
+    displayColumnDefOptions: {
+      'mrt-row-actions': {
+        header: 'Editar'
+      }
+    },
+    onEditingRowCancel: () => setValidationErrors({}),
+    onEditingRowSave: handleSaveRow,
+    renderRowActions: ({ row, table }) => (
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip title="Editar">
+          <IconButton onClick={() => table.setEditingRow(row)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ),
+  });
+
   return (
-    <div>
-      <div className={classes.tableResponsive}>
-        <MaterialTable
-          columns={columns}
-          data={data}
-          options={optionsConfig}
-          localization={localizationConfig}
-          editable={{
-            isDeletable: () => false,
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve, reject) => {
-                setTimeout(async () => {
-                  //Actualizo en firebase
-                  if (oldData.noteToDisplay !== newData.noteToDisplay) {
-                    await editNoteFromImage(
-                      loteDetailId,
-                      oldData.originalNote,
-                      oldData.imageId,
-                      imageNumberInArray,
-                      newData.noteToDisplay
-                    );
-                  }
+    <div className={classes.tableResponsive}>
+      <MaterialReactTable table={table}/>
+    </div>)
+}
 
-                  //Actualizo la tabla (en este caso lo hago manual porque el SWR no interviene)
-                  const dataUpdate = [...data];
-                  const index = oldData.tableData.id;
-                  dataUpdate[index] = newData;
-                  setData([...dataUpdate]);
+const validateRequired = (value) => !!value.length;
 
-                  //TODO: Do something like this to update note at real time?
-                  // props.onUpdate(dataUpdate);
-                  resolve();
-                }, 1000);
-              }),
-          }}
-        />
-      </div>
-    </div>
-  );
+function validateValue(value) {
+  return {
+    description: !validateRequired(value.noteToDisplay)
+      ? 'La nota es requerida'
+      : '',
+  };
 }

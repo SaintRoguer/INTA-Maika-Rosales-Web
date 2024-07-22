@@ -11,6 +11,8 @@ export default function SideImageInfo(props) {
 
   let notes = transformImageNotes(imageData);
 
+  const [notesData, setNotesData] = useState(notes);
+
   const loteGallery = (imagesForGallery) => {
     return (
       <div
@@ -64,6 +66,11 @@ export default function SideImageInfo(props) {
     return <Percentages imageData={imageData} />;
   };
 
+  const handleOnUpdate = (data) => {
+    setNotesData(data);
+
+  };
+
   return (
     <>
       <h6>
@@ -87,9 +94,10 @@ export default function SideImageInfo(props) {
             setShowNotes(false);
           }}
           title="Notas de la imágen"
-          notes={notes}
+          notes={notesData}
           loteDetailId={loteDetailId}
           imageNumberInArray={imageNumber - 1}
+          onUpdate={handleOnUpdate}
         />
       ) : (
         ""

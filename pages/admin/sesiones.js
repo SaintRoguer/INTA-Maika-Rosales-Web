@@ -129,20 +129,31 @@ function Sesiones() {
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <Table
+                  <Table  
                     tableHeaderColor="primary"
                     tableHead={[
-                      { title: "Descripción", field: "description" },
-                      { title: "Fecha", field: "date", editable: "never" },
-                      {
-                        title: "Creada por",
-                        field: "creator",
-                        editable: "never",
+                      { 
+                        accessorKey: "description",
+                        header: "Descripción",
+                        size: "auto",
                       },
-                      {
-                        title: "Cantidad de lotes",
-                        field: "numberOfLotes",
-                        editable: "never",
+                      { 
+                        accessorKey: "date", 
+                        header: "Fecha", 
+                        enableEditing: false,
+                        size: "auto",
+                      },
+                      { 
+                        accessorKey: "creator",
+                        header: "Creada por",
+                        enableEditing: false,
+                        size: "auto",
+                      },
+                      { 
+                        accessorKey: "numberOfLotes",
+                        header: "Cantidad de lotes",
+                        enableEditing: false,
+                        size: "auto",
                       },
                     ]}
                     tableData={tableData}

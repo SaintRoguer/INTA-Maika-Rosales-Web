@@ -4,7 +4,7 @@ import SessionNotesTable from "components/Modal/SessionNoteModal/SessionNotesTab
 
 export default function SessionNoteModal(props) {
   const [open, setOpen] = useState(true);
-
+  const { onUpdate,sessionDetailIDDoc } = props;
   let notesInfo = [];
   props.notes.map((note, index) => {
     notesInfo.push({
@@ -18,13 +18,27 @@ export default function SessionNoteModal(props) {
     props.onCloseModal();
   };
 
+  
+
+  
+  const handleUpdateNotes = (data) => {
+    onUpdate(data);
+
+  };
+
   const showNotes = () => {
     if (props.notes && props.notes.length > 0) {
       return (
         <SessionNotesTable
-          tableHead={[{ title: "Nota", field: "note" }]}
+          tableHead={[{ 
+            accessorKey:"note",
+            header:"Nota",
+            size:"auto",
+          }]}
           tableData={notesInfo}
           sessionDetailsId={props.sessionDetailsId}
+          onUpdateData={handleUpdateNotes}
+          sessionDetailIDoc={sessionDetailIDDoc}
         />
       );
     } else {
