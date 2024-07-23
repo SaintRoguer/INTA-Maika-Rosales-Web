@@ -47,7 +47,7 @@
     "react-grid-gallery": "^1.0.1",
     "react-player": "^2.16.0",
     "react-responsive-modal": "^6.4.2",
-    "react-swipeable-views": "^0.13.9",
+    "react-swipeable-views": "^0.14.0",
     "sass": "^1.77.6",
     "swr": "^2.2.5",
     "webpack": "^5.92.1"
