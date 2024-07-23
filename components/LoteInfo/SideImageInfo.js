@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Gallery from "react-grid-gallery";
+import {Gallery} from "react-grid-gallery";
 import Percentages from "./Percentages";
 import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes";
 import ImageNoteModal from "../Modal/ImageNoteModal/ImageNoteModal";
@@ -27,7 +27,6 @@ export default function SideImageInfo(props) {
         <Gallery
           images={imagesForGallery}
           enableImageSelection={false}
-          backdropClosesModal={true}
         />
       </div>
     );
@@ -38,9 +37,8 @@ export default function SideImageInfo(props) {
 
     imagesForGallery.push({
       src: imageData.before.uri,
-      thumbnail: imageData.before.uri,
-      thumbnailWidth: 243,
-      thumbnailHeight: 190,
+      width: 243,
+      height: 190,
       caption: imageData.after
         ? "Imágen " + imageNumber + " - Antes"
         : "Imágen " + imageNumber,
@@ -51,9 +49,8 @@ export default function SideImageInfo(props) {
 
       imagesForGallery.push({
         src: imageData.after.uri,
-        thumbnail: imageData.after.uri,
-        thumbnailWidth: 243,
-        thumbnailHeight: 190,
+        width: 243,
+        height: 190,
         caption: "Imágen " + imageNumber + " - Después",
         tags: [{ value: "Después", title: "Después" }],
       });

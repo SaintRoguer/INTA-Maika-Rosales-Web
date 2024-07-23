@@ -1,5 +1,5 @@
 import React from "react";
-import Gallery from "react-grid-gallery";
+import {Gallery} from "react-grid-gallery";
 
 export default function LoteImages(props) {
   const { images } = props;
@@ -18,8 +18,7 @@ export default function LoteImages(props) {
         <Gallery
           images={imagesForGallery}
           enableImageSelection={false}
-          enableLightbox={false}
-          onClickThumbnail={(index) => {
+          onClick={(index) => {
             props.onImageSelected(index + 1, imagesData[index]);
           }}
         />
@@ -36,10 +35,9 @@ export default function LoteImages(props) {
         let imagePath = image.before.uri ? image.before.uri : "noimage";
         imagesForGallery.push({
           src: imagePath,
-          thumbnail: imagePath,
           alt: ".Lo sentimos. No se pudo cargar esta imágen.",
-          thumbnailWidth: 243,
-          thumbnailHeight: 190,
+          width: 243,
+          height: 190,
           caption: "Imagen " + imageCount + "- Click para ver más info",
         });
         imagesData.push(image);
