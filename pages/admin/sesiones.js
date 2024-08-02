@@ -1,11 +1,6 @@
 import Admin from "layouts/Admin.js";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
 import Table from "components/Table/Table.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import makeStyles from '@mui/styles/makeStyles';
+
 import useSWR from "swr";
 import moment from "moment";
 import "moment/locale/es";
@@ -13,6 +8,14 @@ import { CSVLink } from "react-csv";
 import Button from "components/CustomButtons/Button.js";
 import formatCsvDataAllSessions from "../../lib/formatCsvDataAllSessions";
 import generatePdf from "../../lib/pdfGeneratorAllSessions";
+
+import MDBox from "components/MDBox";
+
+import { CircularProgress } from '@mui/material';
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import TableContainer from "@mui/material/TableContainer";
+
 
 const styles = {
   cardCategoryWhite: {
@@ -44,10 +47,9 @@ const styles = {
   },
 };
 
-const useStyles = makeStyles(styles);
 
 function Sesiones() {
-  const classes = useStyles();
+
   let csvData;
 
   const { data: allInfo, error: allInfoError } = useSWR(`/api/all`, {
@@ -64,125 +66,44 @@ function Sesiones() {
 
   if (error) return <h3>Error al cargar...</h3>;
   if (!data) {
-    return <h3>Cargando..</h3>; //todo: Poner spinner?
+    return <h3><CircularProgress /></h3>; //todo: Poner spinner?
   }
 
   let tableData = getTableData(data);
 
   return (
-    <div>
-      {tableData && tableData.length > 0 ? (
-        <>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <Card>
-                <CardHeader color="dark">
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div>
-                      <h4 className={classes.cardTitleWhite}>
-                        {" "}
-                        Lista de sesiones creadas en la aplicación móvil.
-                      </h4>
-                      {tableData.length == 1 ? (
-                        <p className={classes.cardCategoryWhite}>
-                          Hay{" "}
-                          <span style={{ color: "yellow" }}>
-                            1 sesión creada.
-                          </span>
-                        </p>
-                      ) : (
-                        <p className={classes.cardCategoryWhite}>
-                          Hay{" "}
-                          <span style={{ color: "yellow" }}>
-                            {tableData.length} sesiones creadas.
-                          </span>
-                        </p>
-                      )}
-                    </div>
-                    {csvData && csvData.data ? (
-                      <div
-                        style={{
-                          display: "inline-block",
-                        }}
-                      >
-                        <CSVLink {...csvData}>
-                          <Button color="rose" style={{ textAlign: "center" }}>
-                            <strong>Descargar CSV</strong>
-                          </Button>
-                        </CSVLink>
+    <>
+           <TableContainer sx={{ boxShadow: "none" }}>
 
-                        <Button
-                          color="success"
-                          onClick={() => {
-                            generatePdf(allInfo);
-                          }}
-                          style={{ textAlign: "center", marginLeft: "10px" }}
-                        >
-                          <strong>Descargar PDF</strong>
-                        </Button>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </CardHeader>
-                <CardBody>
-                  <Table  
-                    tableHeaderColor="primary"
-                    tableHead={[
-                      { 
-                        accessorKey: "description",
-                        header: "Descripción",
-                        size: "auto",
-                      },
-                      { 
-                        accessorKey: "date", 
-                        header: "Fecha", 
-                        enableEditing: false,
-                        size: "auto",
-                      },
-                      { 
-                        accessorKey: "creator",
-                        header: "Creada por",
-                        enableEditing: false,
-                        size: "auto",
-                      },
-                      { 
-                        accessorKey: "numberOfLotes",
-                        header: "Cantidad de lotes",
-                        enableEditing: false,
-                        size: "auto",
-                      },
-                    ]}
-                    tableData={tableData}
-                  />
-                </CardBody>
-              </Card>
-            </GridItem>
-          </GridContainer>
-        </>
-      ) : (
-        <>
-          <h1 style={{ fontWeight: "bold" }}>
-            {" "}
-            Todavía no hay sesiones creadas
-          </h1>
-          <h3>
-            {" "}
-            ¡Bajá la{" "}
-            <a
-              href="https://drive.google.com/file/d/1R1gTdAKPZS6O2zv4WeTZM3sDXDmmssq3/view?usp=sharing"
-              target="_blank"
-            >
-              app
-            </a>{" "}
-            y comenzá a crearlas!
-          </h3>
-        </>
-      )}
-    </div>
+              <Table 
+                tableHead={[
+                { 
+                  accessorKey: "description",
+                  header: "Descripción",
+                },
+                { 
+                  accessorKey: "date", 
+                  header: "Fecha", 
+                  enableEditing: false,
+                },
+                { 
+                  accessorKey: "creator",
+                  header: "Creada por",
+                  enableEditing: false,
+                },
+                { 
+                accessorKey: "numberOfLotes",
+                header: "Cantidad de lotes",
+                enableEditing: false,
+                },
+                ]}
+                tableData={tableData}
+              />
+           
+           </TableContainer>
+
+    </>
+
   );
 }
 

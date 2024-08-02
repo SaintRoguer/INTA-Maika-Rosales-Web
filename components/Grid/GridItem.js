@@ -1,24 +1,28 @@
 import React from "react";
+import { styled } from '@mui/material/styles';
 // nodejs library to set properties for components
 import PropTypes from "prop-types";
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from "@mui/material/Grid";
 
-const styles = {
-  grid: {
-    padding: "0 15px !important",
-  },
+const PREFIX = 'GridItem';
+
+const classes = {
+  grid: `${PREFIX}-grid`
 };
 
-const useStyles = makeStyles(styles);
+const StyledGrid = styled(Grid)({
+  [`&.${classes.grid}`]: {
+    padding: "0 15px !important",
+  },
+});
 
 export default function GridItem(props) {
-  const classes = useStyles();
+
   const { children, ...rest } = props;
   return (
-    <Grid item {...rest} className={classes.grid}>
+    <StyledGrid item {...rest} className={classes.grid}>
       {children}
-    </Grid>
+    </StyledGrid>
   );
 }
 

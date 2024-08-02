@@ -1,0 +1,4 @@
+.container {
+  all: unset; /* Unset all inherited styles */
+
+}

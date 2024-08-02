@@ -1,106 +1,123 @@
-import React from "react";
-import { useRouter } from "next/router";
-// creates a beautiful scrollbar
-import PerfectScrollbar from "perfect-scrollbar";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
-import makeStyles from '@mui/styles/makeStyles';
-// core components
-import Navbar from "components/Navbars/Navbar.js";
-import Footer from "components/Footer/Footer.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 
+import Sidenav from "components/Sidenav";
+import Footer from "components/Footer copy";
+import Configurator from "components/Configurator";
+import DashboardLayout from "layouts/DashboardLayout";
+import DashboardNavbar from "components/Navbars copy/DashboardNavbar";
+import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import logo from "assets/img/logo.png";
+import theme from "assets/theme";
+import themeDark from "assets/theme-dark";
+import { ThemeProvider } from "@mui/material/styles";
+import MDBox from "components/MDBox";
+import Icon from "@mui/material/Icon";
 import routes from "routes.js";
 
-import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
 
-import bgImage from "assets/img/sidebar-1.jpg";
-import logo from "assets/img/logo.png";
-
-let ps;
-
-const useStyles = makeStyles(styles);
 
 export default function Admin({ children, ...rest }) {
-  // styles
-  const classes = useStyles();
-  // ref to help us initialize PerfectScrollbar on windows devices
-  const mainPanel = React.createRef();
-  // states and functions
-  const [image, setImage] = React.useState(bgImage);
-  const [color, setColor] = React.useState("white");
-  const [fixedClasses, setFixedClasses] = React.useState("dropdown");
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleImageClick = (image) => {
-    setImage(image);
-  };
-  const handleColorClick = (color) => {
-    setColor(color);
-  };
-  const handleFixedClick = () => {
-    if (fixedClasses === "dropdown") {
-      setFixedClasses("dropdown show");
-    } else {
-      setFixedClasses("dropdown");
+  const [controller, dispatch] = useMaterialUIController();
+  const {
+    miniSidenav,
+    direction,
+    openConfigurator,
+    sidenavColor,
+    transparentSidenav,
+    whiteSidenav,
+    darkMode,
+  } = controller;
+  const [onMouseEnter, setOnMouseEnter] = useState(false);
+  const router = useRouter();
+  const { pathname } = router;
+  
+  const handleOnMouseEnter = () => {
+    if (miniSidenav && !onMouseEnter) {
+      setMiniSidenav(dispatch, false);
+      setOnMouseEnter(true);
     }
   };
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-  const resizeFunction = () => {
-    if (window.innerWidth >= 960) {
-      setMobileOpen(false);
+
+  const handleOnMouseLeave = () => {
+    if (onMouseEnter) {
+      setMiniSidenav(dispatch, true);
+      setOnMouseEnter(false);
     }
   };
-  // initialize and destroy the PerfectScrollbar plugin
-  React.useEffect(() => {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(mainPanel.current, {
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-      document.body.style.overflow = "hidden";
+
+  useEffect(() => {
+    document.body.setAttribute("dir", direction);
+  }, [direction]);
+
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+    document.scrollingElement.scrollTop = 0;
+  }, [pathname]);
+
+
+  const getIcon = (name) => {
+    switch (name.toLowerCase()) {
+      case "sesiones":
+        return <Icon fontSize="small">computer</Icon>;
+      case "ayuda":
+        return <Icon fontSize="small">help</Icon>;
+      default:
+        return <Icon fontSize="small">dashboard</Icon>;
     }
-    window.addEventListener("resize", resizeFunction);
-    // Specify how to clean up after this effect:
-    return function cleanup() {
-      if (navigator.platform.indexOf("Win") > -1) {
-        ps.destroy();
-      }
-      window.removeEventListener("resize", resizeFunction);
-    };
-  }, [mainPanel]);
+  };
+
+  const transformedRoutes = routes.map(route => ({
+    type: "collapse",
+    name: route.name,
+    key: "admin/" + route.path.substring(1),
+    icon: getIcon(route.name),
+    route: route.path,
+    component: <Admin />,
+  }));
+
+  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+
+  const configsButton = (
+    <MDBox
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      width="3.25rem"
+      height="3.25rem"
+      bgColor="white"
+      shadow="sm"
+      borderRadius="50%"
+      position="fixed"
+      right="2rem"
+      bottom="4rem"
+      zIndex={99}
+      color="dark"
+      sx={{ cursor: "pointer" }}
+      onClick={handleConfiguratorOpen}
+    >
+      <Icon fontSize="small" color="inherit">
+        settings
+      </Icon>
+    </MDBox>
+  );
+  
   return (
-    <div className={classes.wrapper}>
-      <Sidebar
-        routes={routes}
-        logoText={"CGS"}
-        logo={logo}
-        image={image}
-        handleDrawerToggle={handleDrawerToggle}
-        open={mobileOpen}
-        color={color}
-        {...rest}
+    <ThemeProvider theme={darkMode ? themeDark : theme}>
+      <Sidenav
+        color={sidenavColor}
+        brand={(transparentSidenav && !darkMode) || whiteSidenav ? logo : logo}
+        brandName="CGS"
+        routes={transformedRoutes}
+        onMouseEnter={handleOnMouseEnter}
+        onMouseLeave={handleOnMouseLeave}
       />
-      <div className={classes.mainPanel} ref={mainPanel}>
-        <Navbar
-          routes={routes}
-          handleDrawerToggle={handleDrawerToggle}
-          {...rest}
-        />
-        <div className={classes.content}>
-          <div className={classes.container}>{children}</div>
-        </div>
+      <Configurator />
+      <DashboardLayout>
+        <DashboardNavbar />
+        <>{children}</>
         <Footer />
-        <FixedPlugin
-          handleImageClick={handleImageClick}
-          handleColorClick={handleColorClick}
-          bgColor={color}
-          bgImage={image}
-          handleFixedClick={handleFixedClick}
-          fixedClasses={fixedClasses}
-        />
-      </div>
-    </div>
+      </DashboardLayout>
+    </ThemeProvider>
   );
 }

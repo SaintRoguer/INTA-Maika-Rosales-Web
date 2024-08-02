@@ -3,27 +3,31 @@ import React from "react";
 import classNames from "classnames";
 // nodejs library to set properties for components
 import PropTypes from "prop-types";
-import makeStyles from '@mui/styles/makeStyles';
-// @mui/icons-material
-// core components
-
+import { styled } from '@mui/system';
 import styles from "assets/jss/nextjs-material-dashboard/components/cardAvatarStyle.js";
 
-const useStyles = makeStyles(styles);
+// Convert styles to styled components
+const StyledCardAvatar = styled('div')(({ theme }) => ({
+  ...styles.cardAvatar,
+  '&.plain': {
+    ...styles.cardAvatarPlain,
+  },
+  '&.profile': {
+    ...styles.cardAvatarProfile,
+  },
+}));
 
 export default function CardAvatar(props) {
-  const classes = useStyles();
   const { children, className, plain, profile, ...rest } = props;
   const cardAvatarClasses = classNames({
-    [classes.cardAvatar]: true,
-    [classes.cardAvatarProfile]: profile,
-    [classes.cardAvatarPlain]: plain,
+    plain,
+    profile,
     [className]: className !== undefined,
   });
   return (
-    <div className={cardAvatarClasses} {...rest}>
-      {children}
-    </div>
+    <StyledCardAvatar className={cardAvatarClasses} {...rest}>
+    {children}
+  </StyledCardAvatar>
   );
 }
 

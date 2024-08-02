@@ -103,6 +103,7 @@ export default function Sidebar(props) {
             flex: "auto",
           }}
           onClick={() => window.open("https://cs.uns.edu.ar/home/", "_blank")}
+          sx={{ cursor: 'pointer' }}
         />
         <Image
           src="/uns-logo.png"

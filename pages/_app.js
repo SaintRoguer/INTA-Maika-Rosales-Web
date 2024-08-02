@@ -19,58 +19,48 @@ import React from "react";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
-import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
-import { esES } from '@mui/material/locale';
-
-import PageChange from "components/PageChange/PageChange.js";
-
-import "assets/css/nextjs-material-dashboard.css?v=1.0.0";
 import { SWRConfig } from "swr";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "assets/theme";
+import themeDark from "assets/theme-dark";
+import { MaterialUIControllerProvider } from "context";
 
-const theme = createTheme();
+const MyApp = ({ Component, pageProps }) => {
+  const Layout = Component.layout || (({ children }) => <>{children}</>);
 
-export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
+  return (
+    <React.Fragment>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>CGS - Cobertura y gestión de suelos</title>
+      </Head>
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps };
-  }
-  render() {
-    const { Component, pageProps } = this.props;
-
-    const Layout = Component.layout || (({ children }) => <>{children}</>);
-
-    return (
-      <React.Fragment>
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          />
-          <title>CGS - Cobertura y gestión de suelos</title>
-        </Head>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={createTheme(theme,esES)}>
-
-          <SWRConfig
-            value={{
-              fetcher: async (...args) => {
-                const res = await fetch(...args);
-                return res.json();
-              },
-            }}
-          >
+      <SWRConfig
+        value={{
+          fetcher: async (...args) => {
+            const res = await fetch(...args);
+            return res.json();
+          },
+        }}
+      >
+        <MaterialUIControllerProvider>
+            <CssBaseline />
             <Layout>
               <Component {...pageProps} />
             </Layout>
-          </SWRConfig>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </React.Fragment>
-    );
-  }
+        </MaterialUIControllerProvider>
+      </SWRConfig>
+    </React.Fragment>
+  );
+};
+
+MyApp.getInitialProps = async (appContext) => {
+  const appProps = await App.getInitialProps(appContext)
+  return { ...appProps}
 }
+
+export default MyApp;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import makeStyles from '@mui/styles/makeStyles';
 import LoteImages from "../LoteImages/LoteImages";
 import CardFooter from "components/Card/CardFooter.js";
 import { updatePastura } from "../../lib/db-client";
@@ -16,15 +16,22 @@ import EditionModal from "../Modal/EditionModal";
 import moment from "moment";
 import "moment/locale/es";
 
-const styles = {
-  cardCategoryWhite: {
+const PREFIX = 'PasturaInfo';
+
+const classes = {
+  cardCategoryWhite: `${PREFIX}-cardCategoryWhite`,
+  cardTitleWhite: `${PREFIX}-cardTitleWhite`
+};
+
+const StyledGridItem = styled(GridItem)({
+  [`& .${classes.cardCategoryWhite}`]: {
     color: "rgb(239,219,46)",
     margin: "0",
     fontSize: "14px",
     marginTop: "0",
     marginBottom: "0",
   },
-  cardTitleWhite: {
+  [`& .${classes.cardTitleWhite}`]: {
     color: "#FFFFFF",
     marginTop: "0px",
     minHeight: "auto",
@@ -33,9 +40,7 @@ const styles = {
     marginBottom: "3px",
     textDecoration: "none",
   },
-};
-
-const useStyles = makeStyles(styles);
+});
 
 export default function PasturaInfo(props) {
   const { data, pasturaDetailId, onPasturaImageSelected } = props;
@@ -44,7 +49,7 @@ export default function PasturaInfo(props) {
   const [showAverage, setShowAverage] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const classes = useStyles();
+
 
   async function handleEditPastura(newPasturaDescription) {
     setShowEditModal(false);
@@ -117,7 +122,7 @@ export default function PasturaInfo(props) {
 
   const showPasturaAverage = () => {
     return (
-      <GridItem xs={12} sm={12} md={12} style={{ marginBottom: 5 }}>
+      <StyledGridItem xs={12} sm={12} md={12} style={{ marginBottom: 5 }}>
         {!showAverage ? (
           <div className="row" onClick={() => setShowAverage(true)}>
             <AssessmentIcon style={{ marginBottom: -2 }} />{" "}
@@ -148,7 +153,7 @@ export default function PasturaInfo(props) {
         ) : (
           ""
         )}
-      </GridItem>
+      </StyledGridItem>
     );
   };
 

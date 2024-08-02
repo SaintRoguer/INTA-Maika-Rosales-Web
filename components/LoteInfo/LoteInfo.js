@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import makeStyles from '@mui/styles/makeStyles';
 import LoteImages from "../LoteImages/LoteImages";
 import SideImageInfo from "./SideImageInfo";
 import LotePasturas from "../LotePasturas/LotePasturas";
@@ -20,15 +20,23 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditionModal from "../Modal/EditionModal";
 
-const styles = {
-  cardCategoryWhite: {
+const PREFIX = 'LoteInfo';
+
+const classes = {
+  cardCategoryWhite: `${PREFIX}-cardCategoryWhite`,
+  cardTitleWhite: `${PREFIX}-cardTitleWhite`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+  [`& .${classes.cardCategoryWhite}`]: {
     color: "rgb(239,219,46)",
     margin: "0",
     fontSize: "14px",
     marginTop: "0",
     marginBottom: "0",
   },
-  cardTitleWhite: {
+  [`& .${classes.cardTitleWhite}`]: {
     color: "#FFFFFF",
     marginTop: "0px",
     minHeight: "auto",
@@ -37,9 +45,7 @@ const styles = {
     marginBottom: "3px",
     textDecoration: "none",
   },
-};
-
-const useStyles = makeStyles(styles);
+});
 
 export default function LoteInfo(props) {
   const { loteData, pasturasData, loteDetailId } = props;
@@ -50,7 +56,7 @@ export default function LoteInfo(props) {
   const [isMinimized, setIsMinimized] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const classes = useStyles();
+
 
   async function handleEditLote(newLoteDescription) {
     setShowEditModal(false);
@@ -131,13 +137,13 @@ export default function LoteInfo(props) {
   const showContent = () => {
     if (isMinimized) {
       return (
-        <>
+        (<Root>
           <GridItem xs={12} sm={12} md={6}>
             <Card chart>{cardHeader()}</Card>
           </GridItem>
           <GridItem xs={12} sm={12} md={6}></GridItem>
           {loteEditionModal()}
-        </>
+        </Root>)
       );
     } else {
       return (

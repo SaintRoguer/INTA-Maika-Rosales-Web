@@ -1,31 +1,66 @@
 import React from "react";
-// nodejs library that concatenates classes
 import classNames from "classnames";
-// nodejs library to set properties for components
 import PropTypes from "prop-types";
-import makeStyles from '@mui/styles/makeStyles';
-// @mui/icons-material
-
-// core components
+import { styled } from '@mui/system';
 import styles from "assets/jss/nextjs-material-dashboard/components/cardHeaderStyle.js";
 
-const useStyles = makeStyles(styles);
+// Convert styles to styled components
+const StyledCardHeader = styled('div')(({ theme }) => ({
+  ...styles.cardHeader,
+  '&.plain': {
+    ...styles.cardHeaderPlain,
+  },
+  '&.icon': {
+    ...styles.cardHeaderIcon,
+  },
+  '&.stats': {
+    ...styles.cardHeaderStats,
+  },
+  '&.warning': {
+    color: styles.warningCardHeader.color,
+    ...(styles.warningCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.success': {
+    color: styles.successCardHeader.color,
+    ...(styles.successCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.danger': {
+    color: styles.dangerCardHeader.color,
+    ...(styles.dangerCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.info': {
+    color: styles.infoCardHeader.color,
+    ...(styles.infoCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.primary': {
+    color: styles.primaryCardHeader.color,
+    ...(styles.primaryCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.rose': {
+    color: styles.roseCardHeader.color,
+    ...(styles.roseCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.dark': {
+    color: styles.darkCardHeader.color,
+    ...(styles.darkCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+}));
 
 export default function CardHeader(props) {
-  const classes = useStyles();
   const { className, children, color, plain, stats, icon, ...rest } = props;
+
   const cardHeaderClasses = classNames({
-    [classes.cardHeader]: true,
-    [classes[color + "CardHeader"]]: color,
-    [classes.cardHeaderPlain]: plain,
-    [classes.cardHeaderStats]: stats,
-    [classes.cardHeaderIcon]: icon,
+    plain,
+    icon,
+    stats,
+    [color]: color,
     [className]: className !== undefined,
   });
+
   return (
-    <div className={cardHeaderClasses} {...rest}>
+    <StyledCardHeader className={cardHeaderClasses} {...rest}>
       {children}
-    </div>
+    </StyledCardHeader>
   );
 }
 

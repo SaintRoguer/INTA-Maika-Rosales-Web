@@ -1,28 +1,52 @@
 import React from "react";
-// nodejs library that concatenates classes
 import classNames from "classnames";
-// nodejs library to set properties for components
 import PropTypes from "prop-types";
-import makeStyles from '@mui/styles/makeStyles';
-// @mui/icons-material
-
-// core components
+import { styled } from '@mui/system';
 import styles from "assets/jss/nextjs-material-dashboard/components/cardIconStyle.js";
 
-const useStyles = makeStyles(styles);
+// Convert styles to styled components
+const StyledCardIcon = styled('div')(({ theme }) => ({
+  ...styles.cardIcon,
+  '&.warning': {
+    color: styles.warningCardHeader.color,
+    ...(styles.warningCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.success': {
+    color: styles.successCardHeader.color,
+    ...(styles.successCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.danger': {
+    color: styles.dangerCardHeader.color,
+    ...(styles.dangerCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.info': {
+    color: styles.infoCardHeader.color,
+    ...(styles.infoCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.primary': {
+    color: styles.primaryCardHeader.color,
+    ...(styles.primaryCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.rose': {
+    color: styles.roseCardHeader.color,
+    ...(styles.roseCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+  '&.dark': {
+    color: styles.darkCardHeader.color,
+    ...(styles.darkCardHeader['&:not($cardHeaderIcon)'] || {}),
+  },
+}));
 
 export default function CardIcon(props) {
-  const classes = useStyles();
   const { className, children, color, ...rest } = props;
   const cardIconClasses = classNames({
-    [classes.cardIcon]: true,
-    [classes[color + "CardHeader"]]: color,
+    [color]: color,
     [className]: className !== undefined,
   });
   return (
-    <div className={cardIconClasses} {...rest}>
+    <StyledCardIcon className={cardIconClasses} {...rest}>
       {children}
-    </div>
+    </StyledCardIcon>
   );
 }
 

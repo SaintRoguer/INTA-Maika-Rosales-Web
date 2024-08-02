@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import makeStyles from '@mui/styles/makeStyles';
-import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
-import { Box, Button, IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import Icon from "@mui/material/Icon";
+
 import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
 
 import { updateSession } from "../../lib/db-client";
+import styles from './reset.module.css';
 
-const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const [validationErrors, setValidationErrors] = useState({});
-  const classes = useStyles();
   const { tableHead, tableData } = props;
 
   const [columns, setColumns] = useState(tableHead);
@@ -70,6 +69,7 @@ export default function CustomTable(props) {
     muiTableContainerProps: {
       sx: {
         minHeight: '500px',
+        overflow: 'hidden',
       },
     },
     displayColumnDefOptions: {
@@ -94,18 +94,30 @@ export default function CustomTable(props) {
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Editar">
           <IconButton onClick={() => table.setEditingRow(row)}>
-            <EditIcon />
+            <Icon fontSize="small">edit</Icon>
           </IconButton>
         </Tooltip>
       </Box>
-    )
+    ),
+    muiTableHeadProps: {
+      sx: {
+        padding: '0rem',
+        display: 'table-header-group'
+      },
+    },
+    muiTableProps: {
+      sx: {
+        padding: '0rem',
+      },
+    }
+    
   });
   
-return (
-  <div className={classes.tableResponsive}>
-    <MaterialReactTable table={table}/>
-  </div>)
-}
+return(
+<div className={styles.reset}>
+  <MaterialReactTable table={table}/>
+</div>
+)}
 
 CustomTable.propTypes = {
   tableHead: PropTypes.arrayOf(PropTypes.object),

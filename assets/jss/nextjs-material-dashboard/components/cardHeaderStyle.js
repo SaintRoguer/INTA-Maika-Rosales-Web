@@ -22,7 +22,7 @@ const cardHeaderStyle = {
       position: "relative",
       color: whiteColor,
     },
-    "&:first-child": {
+    "&:first-of-type": {
       borderRadius: "calc(.25rem - 1px) calc(.25rem - 1px) 0 0",
     },
     "&$warningCardHeader,&$successCardHeader,&$dangerCardHeader,&$infoCardHeader,&$primaryCardHeader,&$roseCardHeader,&$darkCardHeader": {

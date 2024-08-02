@@ -73,7 +73,7 @@ const headerLinksStyle = (theme) => ({
   },
   notifications: {
     zIndex: "4",
-    [theme.breakpoints.up("md")]: {
+    
       position: "absolute",
       top: "2px",
       border: "1px solid " + whiteColor,
@@ -88,12 +88,7 @@ const headerLinksStyle = (theme) => ({
       lineHeight: "16px",
       verticalAlign: "middle",
       display: "block",
-    },
-    [theme.breakpoints.down('md')]: {
-      ...defaultFont,
-      fontSize: "14px",
-      marginRight: "8px",
-    },
+    
   },
   manager: {
     [theme.breakpoints.down('md')]: {
