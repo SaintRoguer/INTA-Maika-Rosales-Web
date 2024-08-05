@@ -90,8 +90,7 @@ export default function CustomTable(props) {
     muiTableContainerProps: {
       sx: {
         minHeight: '500px',
-        overflow: 'hidden',
-      },
+        overflowX: 'auto',      },
     },
     displayColumnDefOptions: {
       'mrt-row-actions': {
@@ -210,7 +209,7 @@ export default function CustomTable(props) {
   });
   
 return(
-<div >
+<div style={{ overflowX: 'auto' }}>
   <MaterialReactTable table={table}/>
 </div>
 )}
