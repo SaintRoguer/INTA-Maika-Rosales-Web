@@ -18,16 +18,19 @@
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
-import Router from "next/router";
 import { SWRConfig } from "swr";
-import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+
+import { MaterialUIControllerProvider, useMaterialUIController } from "context";
 import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
-import { MaterialUIControllerProvider } from "context";
-
+import { ThemeProvider } from "@mui/material/styles";
 const MyApp = ({ Component, pageProps }) => {
   const Layout = Component.layout || (({ children }) => <>{children}</>);
+  const [controller, dispatch] = useMaterialUIController();
+    const {
+        darkMode,
+    } = controller;
 
   return (
     <React.Fragment>
@@ -36,7 +39,7 @@ const MyApp = ({ Component, pageProps }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <title>CGS - Cobertura y gestión de suelos</title>
+        <title>Cobertura y gestión de suelos</title>
       </Head>
 
       <SWRConfig
@@ -47,12 +50,12 @@ const MyApp = ({ Component, pageProps }) => {
           },
         }}
       >
-        <MaterialUIControllerProvider>
-            <CssBaseline />
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-        </MaterialUIControllerProvider>
+        <Layout>
+            <ThemeProvider theme={darkMode ? themeDark : theme}>
+              <CssBaseline />
+                <Component {...pageProps} />
+            </ThemeProvider>
+        </Layout>
       </SWRConfig>
     </React.Fragment>
   );
@@ -63,4 +66,12 @@ MyApp.getInitialProps = async (appContext) => {
   return { ...appProps}
 }
 
-export default MyApp;
+function AppWrapper(props) {
+  return (
+    <MaterialUIControllerProvider>
+      <MyApp {...props} />
+    </MaterialUIControllerProvider>
+  );
+}
+
+export default AppWrapper;

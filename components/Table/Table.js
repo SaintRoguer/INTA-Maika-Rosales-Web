@@ -5,21 +5,42 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import Icon from "@mui/material/Icon";
 
 import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
 
 import { updateSession } from "../../lib/db-client";
-import styles from './reset.module.css';
+
+import { useMaterialUIController} from "context";
+
+
+import { darken, lighten, useTheme } from '@mui/material';
+import { color, padding } from "@mui/system";
 
 
 export default function CustomTable(props) {
+  
+
   const [validationErrors, setValidationErrors] = useState({});
   const { tableHead, tableData } = props;
 
   const [columns, setColumns] = useState(tableHead);
   const [data, setData] = useState(tableData);
+  const [controller] = useMaterialUIController();
+  const { darkMode } = controller;
+  const theme = useTheme();
+   //light or dark green
+   const baseBackgroundColor =
+   darkMode ? 
+   theme.palette.mode === 'dark'
+   ? 'rgba(31, 40, 62, 1)'
+   : 'rgba(31, 40, 62, 1)':
+   theme.palette.mode === 'dark'
+     ? 'rgba(255, 255, 255, 1)'
+     : 'rgba(255, 255, 255, 1)';
+
+   // light or dark font color
+   const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
 
   const goToSessionDetail = (rowData) => {
     /*router.push("/sesion/[id]", `/sesion/${rowData.id}`, {
@@ -85,8 +106,7 @@ export default function CustomTable(props) {
       },
       sx: {
         cursor: 'pointer', //you might want to change the cursor too when adding an onClick
-      },
-      
+      },       
     }),
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveRow,
@@ -94,7 +114,7 @@ export default function CustomTable(props) {
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Editar">
           <IconButton onClick={() => table.setEditingRow(row)}>
-            <Icon fontSize="small">edit</Icon>
+            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">edit</Icon>
           </IconButton>
         </Tooltip>
       </Box>
@@ -102,19 +122,95 @@ export default function CustomTable(props) {
     muiTableHeadProps: {
       sx: {
         padding: '0rem',
-        display: 'table-header-group'
+        display: 'table-header-group',
+        color: fontColor,
       },
     },
     muiTableProps: {
       sx: {
         padding: '0rem',
       },
-    }
-    
+    },
+    muiTableBodyProps: {
+      sx: (theme) => ({
+        '& tr:nth-of-type(odd):not([data-selected="true"]):not([data-pinned="true"]) > td':
+          {
+            backgroundColor: lighten(baseBackgroundColor, 0.1),
+            color: fontColor,
+            fontWeight: 'bold',
+
+
+          },
+        '& tr:nth-of-type(odd):not([data-selected="true"]):not([data-pinned="true"]):hover > td':
+          {
+            backgroundColor: darken(baseBackgroundColor, 0.2),
+          },
+        '& tr:nth-of-type(even):not([data-selected="true"]):not([data-pinned="true"]) > td':
+          {
+            backgroundColor: darkMode ? baseBackgroundColor : darken(baseBackgroundColor, 0.1),
+            color: fontColor,
+            fontWeight: 'bold',
+
+
+          },
+        '& tr:nth-of-type(even):not([data-selected="true"]):not([data-pinned="true"]):hover > td':
+          {
+            backgroundColor: darken(baseBackgroundColor, 0.2),
+          },
+      }),
+    },
+    muiTablePaperProps: {
+      sx: {
+        '.MuiPaper-root': {
+          padding: '0rem',
+         }
+      },
+    },
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: darkMode ? baseBackgroundColor : darken(baseBackgroundColor, 0.1),
+      draggingBorderColor: theme.palette.secondary.main,
+      
+    }),
+    muiTableHeadCellProps: {
+      sx: {
+        fontWeight: 'bold',
+        color: fontColor,
+      },
+    },
+    muiTopToolbarProps :  {
+      sx: {
+        '.MuiIconButton-root': {
+          color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+        },
+        '.MuiPaper-root': {
+          padding: '0rem',
+         }
+      },
+    },
+    muiBottomToolbarProps :  {
+      sx: {
+        '.MuiIconButton-root': {
+          color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+        },
+        '.MuiTypography-root': {
+          color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+        },
+        '.MuiSelect-select': {
+          color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+        },
+      },
+    },
+    muiTablePaperProps : {
+      sx: {
+        '.MuiPaper-elevation	': {
+          padding: '0rem',
+         }
+      },
+    },
   });
   
 return(
-<div className={styles.reset}>
+<div >
   <MaterialReactTable table={table}/>
 </div>
 )}

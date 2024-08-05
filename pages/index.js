@@ -1,5 +1,4 @@
 // pages/index.js
-
 export async function getServerSideProps(context) {
   return {
     redirect: {
