@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Admin from "layouts/Admin.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -71,7 +71,7 @@ export async function getStaticProps(context) {
   sessionDetails = JSON.stringify(sessionDetails);
 
   return {
-    props: { sessionDetails,sessionId }, // will be passed to the page component as props
+    props: { sessionDetails, sessionId }, // will be passed to the page component as props
     revalidate: 1, // In seconds
   };
 }
@@ -79,7 +79,7 @@ export async function getStaticProps(context) {
 function SessionDetail({ sessionDetails, sessionId }) {
   const classes = useStyles();
   const [showNotes, setShowNotes] = useState(false);
-  const router = useRouter();  
+  const router = useRouter();
 
   if (router.isFallback) return <h3> Cargando... </h3>;
 
@@ -135,7 +135,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
   const handleOnUpdate = (data) => {
     const dataArray = Object.values(data);
     for (let i = 0; i < data.length; i++) {
-      dataArray[i]=data[i].note;
+      dataArray[i] = data[i].note;
     }
     console.log("data", dataArray);
     setNotesData(dataArray);
@@ -164,12 +164,12 @@ function SessionDetail({ sessionDetails, sessionId }) {
                   <EventIcon style={{ marginBottom: -5 }} /> Sesión creada el{" "}
                   <strong>
                     {moment(
-                      new Date(sessionDetailsJSON.date._seconds * 1000)
+                      new Date(sessionDetailsJSON.date.seconds * 1000)
                     ).format("L")}
                   </strong>{" "}
                   a las{" "}
                   {moment(
-                    new Date(sessionDetailsJSON.date._seconds * 1000),
+                    new Date(sessionDetailsJSON.date.seconds * 1000),
                     "dd/mm/yyyy"
                   ).format("HH:mm")}{" "}
                   hs
