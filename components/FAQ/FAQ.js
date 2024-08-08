@@ -2,85 +2,101 @@ import React from "react";
 import { styled } from '@mui/material/styles';
 import Faq from "react-faq-component";
 import GridItem from "components/Grid/GridItem.js";
-import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import { dataGeneralInfo, styleGeneralInfo } from "./generalInfo";
+import { dataGeneralInfo, getStyleGeneralInfo } from "./generalInfo";
 import { dataAppInfo, styleAppInfo } from "./mobileAppInfo";
 import { dataWebInfo, styleWebInfo } from "./webInfo";
 
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import { useMaterialUIController} from "context";
+
+
 const PREFIX = 'FAQ';
-
-const classes = {
-  cardTitleWhite: `${PREFIX}-cardTitleWhite`
-};
-
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')({
-  [`& .${classes.cardTitleWhite}`]: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-  },
-});
 
 export default function FAQ() {
 
 
-  return (
-    (<Root>
+const [controller] = useMaterialUIController();
+const { darkMode } = controller;
+
+
+
+  return (    
+  <MDBox mt={6} mb={3}>
+    <Grid container spacing={4} justifyContent="center">
+
       {/* Preguntas GENERALES */}
-      <GridItem xs={12} sm={12} md={12}>
-        <Card chart>
-          <CardHeader color="primary">
-            <div style={{ display: "flex" }}>
-              <h4 className={classes.cardTitleWhite}>
-                <strong>Generales</strong>
-              </h4>
-            </div>
-          </CardHeader>
-
-          <CardBody>
-            <Faq data={dataGeneralInfo} styles={styleGeneralInfo} />
-          </CardBody>
+      <Grid item xs={12} lg={8} >
+        <Card>
+        <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="info"
+              >
+            <MDTypography variant="h6" color="white">
+              PREGUNTAS GENERALES
+            </MDTypography>
+          </MDBox>
+          <MDBox pt={2} px={2} pb={2}>
+            <Faq data={dataGeneralInfo(darkMode)} styles={getStyleGeneralInfo(darkMode)} />
+          </MDBox>
         </Card>
-      </GridItem>
+      </Grid>
+
       {/* Preguntas APP MOBILE*/}
-      <GridItem xs={12} sm={12} md={12}>
-        <Card chart>
-          <CardHeader color="dark">
-            <div style={{ display: "flex" }}>
-              <h4 className={classes.cardTitleWhite}>
-                <strong>Aplicación Android</strong>
-              </h4>
-            </div>
-          </CardHeader>
-
-          <CardBody>
-            <Faq data={dataAppInfo} styles={styleAppInfo} />
-          </CardBody>
+      <Grid item xs={12} lg={8}>
+        <Card>
+        <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="warning"
+                borderRadius="lg"
+                coloredShadow="warning"
+              >
+             <MDTypography variant="h6" color="white">PREGUNTAS APP MOBILE</MDTypography>
+          </MDBox>
+          <MDBox pt={2} px={2} pb={2}>
+            <Faq data={dataAppInfo(darkMode)} styles={styleAppInfo(darkMode)} />
+          </MDBox>
         </Card>
-      </GridItem>
+      </Grid>
+
+
       {/* Preguntas WEB */}
-      <GridItem xs={12} sm={12} md={12}>
-        <Card chart>
-          <CardHeader color="danger">
-            <div style={{ display: "flex" }}>
-              <h4 className={classes.cardTitleWhite}>
-                <strong>Web</strong>
-              </h4>
-            </div>
-          </CardHeader>
-
-          <CardBody>
-            <Faq data={dataWebInfo} styles={styleWebInfo} />
-          </CardBody>
+      <Grid item xs={12} lg={8}>
+        <Card>
+        <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="error"
+                borderRadius="lg"
+                coloredShadow="error"
+              >
+             <MDTypography variant="h6" color="white">PREGUNTAS WEB</MDTypography>
+          </MDBox>
+          <MDBox pt={2} px={2} pb={2}>
+            <Faq data={dataWebInfo} styles={styleWebInfo(darkMode)} />
+          </MDBox>
         </Card>
-      </GridItem>
-    </Root>)
+      </Grid>
+
+    </Grid>
+  </MDBox>
+    
   );
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const dataGeneralInfo = {
+const dataGeneralInfo = (darkMode) => ({
   rows: [
     {
       title: (
@@ -54,16 +54,29 @@ const dataGeneralInfo = {
       content: (
         <p>
           CGS nace de la colaboración entre el{" "}
-          <a href="https://www.argentina.gob.ar/inta" target="_blank">
+          <a 
+            href="https://www.argentina.gob.ar/inta" 
+            target="_blank" 
+            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline !important",  fontWeight: "bold" }}
+          >
             INTA
           </a>{" "}
           y el{" "}
-          <a href="https://cs.uns.edu.ar/home/">
+          <a 
+            href="https://cs.uns.edu.ar/home/" 
+            target="_blank" 
+            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline !important",  fontWeight: "bold" 
+            }}
+          >
             Departamento de Ciencias e Ingeniería de la Computación
           </a>{" "}
           de la Universidad Nacional del Sur, Bahía Blanca. La idea original del
           proyecto es de{" "}
-          <a href="http://cs.uns.edu.ar/~mll/web/" target="_blank">
+          <a 
+            href="http://cs.uns.edu.ar/~mll/web/" 
+            target="_blank" 
+            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline", fontWeight: "bold"  }}
+          >
             Martin Larrea
           </a>
           , en representación del Departamento de Ciencias e Ingeniería de la
@@ -71,6 +84,7 @@ const dataGeneralInfo = {
           <a
             href="https://www.researchgate.net/profile/Geronimo_De_Leo"
             target="_blank"
+            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline", fontWeight: "bold" }}
           >
             Gerónimo De Leo
           </a>
@@ -101,17 +115,20 @@ const dataGeneralInfo = {
       ),
     },
   ],
-};
+});
 
-const styleGeneralInfo = {
-  bgColor: "EEEEE",
-  rowTitleColor: "#9c27b0",
+
+
+const getStyleGeneralInfo = (darkMode) => ({
+  bgColor: darkMode ? "#1f283e" : "#EEEEE",
+  rowTitleColor: darkMode ? "#ffffff" : "#1f283e",
   rowTitleTextSize: "large",
-  rowContentColor: "1D1D1D",
+  rowContentColor: darkMode ? "#ffffff" : "#1D1D1D",
   rowContentTextSize: "18px",
   rowContentPaddingLeft: "50px",
   rowContentPaddingRight: "50px",
-  arrowColor: "black",
-};
+  arrowColor: darkMode ? "#ffffff" : "black",
+});
 
-export { dataGeneralInfo, styleGeneralInfo };
+export { dataGeneralInfo, getStyleGeneralInfo };
+

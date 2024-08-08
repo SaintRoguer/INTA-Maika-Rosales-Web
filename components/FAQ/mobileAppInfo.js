@@ -1,4 +1,4 @@
-const dataAppInfo = {
+const dataAppInfo = (darkMode) => ({
   rows: [
     {
       title: (
@@ -13,6 +13,8 @@ const dataAppInfo = {
           <a
             href="https://drive.google.com/file/d/1R1gTdAKPZS6O2zv4WeTZM3sDXDmmssq3/view?usp=sharing"
             target="_blank"
+            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline !important",  fontWeight: "bold" }}
+
           >
             <strong>acá</strong>
           </a>
@@ -20,7 +22,8 @@ const dataAppInfo = {
           <a
             href="https://miracomosehace.com/instalar-aplicaciones-externas-origen-desconocido-android/"
             target="blank"
-            style={{ color: "blue" }}
+            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline !important",  fontWeight: "bold" }}
+
           >
             habilites la opción de 'Instalar aplicaciones de origen
             desconocido'.
@@ -29,17 +32,17 @@ const dataAppInfo = {
       ),
     },
   ],
-};
+});
 
-const styleAppInfo = {
-  bgColor: "#FDFDFD",
-  rowTitleColor: "#252D32",
+const styleAppInfo = (darkMode) => ({
+  bgColor: darkMode ? "#1f283e" : "#EEEEE",
+  rowTitleColor: darkMode ? "#ffffff" : "#1f283e",
   rowTitleTextSize: "large",
-  rowContentColor: "1D1D1D",
+  rowContentColor: darkMode ? "#ffffff" : "#1D1D1D",
   rowContentTextSize: "18px",
   rowContentPaddingLeft: "50px",
   rowContentPaddingRight: "50px",
-  arrowColor: "black",
-};
+  arrowColor: darkMode ? "#ffffff" : "black",
+});
 
 export { dataAppInfo, styleAppInfo };

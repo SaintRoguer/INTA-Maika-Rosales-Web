@@ -68,15 +68,15 @@ const dataWebInfo = {
   ],
 };
 
-const styleWebInfo = {
-  bgColor: "EEEEE",
-  rowTitleColor: "#f44336",
+const styleWebInfo = (darkMode) => ({
+  bgColor: darkMode ? "#1f283e" : "#EEEEE",
+  rowTitleColor: darkMode ? "#ffffff" : "#1f283e",
   rowTitleTextSize: "large",
-  rowContentColor: "1D1D1D",
+  rowContentColor: darkMode ? "#ffffff" : "#1D1D1D",
   rowContentTextSize: "18px",
   rowContentPaddingLeft: "50px",
   rowContentPaddingRight: "50px",
-  arrowColor: "black",
-};
+  arrowColor: darkMode ? "#ffffff" : "black",
+});
 
 export { dataWebInfo, styleWebInfo };
