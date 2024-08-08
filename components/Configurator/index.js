@@ -22,6 +22,9 @@ import Divider from "@mui/material/Divider";
 import Switch from "@mui/material/Switch";
 import IconButton from "@mui/material/IconButton";
 import Icon from "@mui/material/Icon";
+import Link from "@mui/material/Link";
+import { FeedbackFish } from "@feedback-fish/react";
+
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -132,7 +135,7 @@ function Configurator() {
         px={3}
       >
         <MDBox>
-          <MDTypography variant="h5">Configuración del Tema</MDTypography>
+          <MDTypography variant="h5">Configuración</MDTypography>
         </MDBox>
 
         <Icon
@@ -276,7 +279,40 @@ function Configurator() {
           <Switch checked={darkMode} onChange={handleDarkMode} />
         </MDBox>
         <Divider />
-      
+         <MDBox mt={3} mb={2}>
+          <MDButton
+            component={Link}
+            href="https://drive.google.com/file/d/1R1gTdAKPZS6O2zv4WeTZM3sDXDmmssq3/view?usp=sharing"
+            target="_blank"
+            rel="noreferrer"
+            color={darkMode ? "success" : "dark"}
+            variant="outlined"
+            fullWidth
+          >
+            <Icon fontSize="small" color="success">
+             android
+            </Icon>
+              Descargar app Android
+          </MDButton>
+        </MDBox>
+       <Divider />
+       <MDBox mt={3} mb={2}>
+      <FeedbackFish projectId="af88f33ebb78ee">
+        <MDButton
+          component="a"
+          href="#"
+          data-feedback-fish
+          color={darkMode ? "warning" : "dark"}
+          variant="outlined"
+          fullWidth
+        >
+          <Icon fontSize="small" color="warning">
+            warning
+          </Icon>
+          Dar feedback
+        </MDButton>
+      </FeedbackFish>
+    </MDBox>
       </MDBox>
     </ConfiguratorRoot>
   );

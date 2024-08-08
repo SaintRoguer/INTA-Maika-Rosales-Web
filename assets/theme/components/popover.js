@@ -30,7 +30,7 @@ const popover = {
     paper: {
       backgroundColor: transparent.main,
       boxShadow: lg,
-      padding: pxToRem(8),
+      //padding: pxToRem(8),
       borderRadius: borderRadius.md,
     },
   },

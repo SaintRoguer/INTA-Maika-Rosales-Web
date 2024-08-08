@@ -128,13 +128,13 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       variant="permanent"
       ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}
     >
-      <MDBox pt={3} pb={1} px={4} textAlign="center" >
+      <MDBox pt={1}  textAlign="center" >
         <MDBox
           display={{ xs: "block", xl: "none" }}
           position="absolute"
           top={0}
           right={0}
-          p={1.625}
+          
           onClick={closeSidenav}
           sx={{ cursor: "pointer" }}
         >
@@ -160,7 +160,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           (darkMode && !transparentSidenav && whiteSidenav)
         }
       />
-      <MDBox pt={0} pb={1} px={4} textAlign="center">
+      <MDBox pt={0} px={4} textAlign="center">
         <a href="https://www.argentina.gob.ar/inta" target="_blank" rel="noopener noreferrer">
           <MDBox 
             component="img" 

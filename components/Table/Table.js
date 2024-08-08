@@ -136,7 +136,6 @@ export default function CustomTable(props) {
           {
             backgroundColor: lighten(baseBackgroundColor, 0.1),
             color: fontColor,
-            fontWeight: 'bold',
 
 
           },
@@ -148,7 +147,6 @@ export default function CustomTable(props) {
           {
             backgroundColor: darkMode ? baseBackgroundColor : darken(baseBackgroundColor, 0.1),
             color: fontColor,
-            fontWeight: 'bold',
 
 
           },
@@ -160,9 +158,12 @@ export default function CustomTable(props) {
     },
     muiTablePaperProps: {
       sx: {
-        '.MuiPaper-root': {
-          padding: '0rem',
-         }
+        '& .MuiPopover-paper': {
+          padding: 0,
+        },
+        '& .MuiMenu-paper': {
+          padding: 0,
+        },
       },
     },
     mrtTheme: (theme) => ({
@@ -174,6 +175,9 @@ export default function CustomTable(props) {
       sx: {
         fontWeight: 'bold',
         color: fontColor,
+        '.MuiIconButton-root': {
+          color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+        },
       },
     },
     muiTopToolbarProps :  {
