@@ -1,9 +1,5 @@
 import React from "react";
-import { styled } from '@mui/material/styles';
 import Faq from "react-faq-component";
-import GridItem from "components/Grid/GridItem.js";
-import CardBody from "components/Card/CardBody.js";
-import CardHeader from "components/Card/CardHeader.js";
 import { dataGeneralInfo, getStyleGeneralInfo } from "./generalInfo";
 import { dataAppInfo, styleAppInfo } from "./mobileAppInfo";
 import { dataWebInfo, styleWebInfo } from "./webInfo";

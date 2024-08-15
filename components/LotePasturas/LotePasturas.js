@@ -1,7 +1,16 @@
 import React from "react";
 import PasturaInfo from "./PasturaInfo";
+import MDTypography from "components/MDTypography";
+import { fontSize } from "@mui/system";
+import {
+  useMaterialUIController,
+} from "context";
 
 export default function LotePasturas({ pasturasData, onPasturaImageSelected }) {
+  const [controller, dispatch] = useMaterialUIController();
+  const {
+    darkMode,
+  } = controller;
   const lotesInfo = () => {
     pasturasData.sort(
       (dataA, dataB) =>
@@ -21,7 +30,7 @@ export default function LotePasturas({ pasturasData, onPasturaImageSelected }) {
         </>
       );
     } else {
-      return <h5>El lote no tiene ninguna pastura.</h5>;
+      return <MDTypography color={ darkMode ? "white" :"dark"} sx={{fontSize:"16.6px"}}>El lote no tiene ninguna pastura.</MDTypography>;
     }
   };
 

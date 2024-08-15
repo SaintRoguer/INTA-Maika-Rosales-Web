@@ -9,9 +9,10 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import Icon from "@mui/material/Icon";
 import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
-
+import { useMaterialUIController} from "context";
+import { darken, lighten, useTheme } from '@mui/material';
 
 const useStyles = makeStyles(styles);
 
@@ -21,6 +22,21 @@ export default function ImageNotesTable(props) {
   const { tableHead, tableData, loteDetailId, imageNumberInArray, onUpdateData } = props;
   const [columns, setColumns] = useState(tableHead);
   const [data, setData] = useState(tableData);
+  const [controller] = useMaterialUIController();
+  const { darkMode } = controller;
+  const theme = useTheme();
+   //light or dark green
+   const baseBackgroundColor =
+   darkMode ? 
+   theme.palette.mode === 'dark'
+   ? 'rgba(31, 40, 62, 1)'
+   : 'rgba(31, 40, 62, 1)':
+   theme.palette.mode === 'dark'
+     ? 'rgba(255, 255, 255, 1)'
+     : 'rgba(255, 255, 255, 1)';
+
+   // light or dark font color
+   const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
 
    //UPDATE action
    const handleSaveRow = async ({ row, table,values }) => {
@@ -88,12 +104,104 @@ export default function ImageNotesTable(props) {
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Editar">
           <IconButton onClick={() => table.setEditingRow(row)}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-      </Box>
-    ),
-  });
+          <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">edit</Icon>
+        </IconButton>
+      </Tooltip>
+    </Box>
+  ),
+  muiTableHeadProps: {
+    sx: {
+      padding: '0rem',
+      display: 'table-header-group',
+      color: fontColor,
+    },
+  },
+  muiTableProps: {
+    sx: {
+      padding: '0rem',
+    },
+  },
+  muiTableBodyProps: {
+    sx: (theme) => ({
+      '& tr:nth-of-type(odd):not([data-selected="true"]):not([data-pinned="true"]) > td':
+        {
+          backgroundColor: lighten(baseBackgroundColor, 0.1),
+          color: fontColor,
+
+
+        },
+      '& tr:nth-of-type(odd):not([data-selected="true"]):not([data-pinned="true"]):hover > td':
+        {
+          backgroundColor: darken(baseBackgroundColor, 0.2),
+        },
+      '& tr:nth-of-type(even):not([data-selected="true"]):not([data-pinned="true"]) > td':
+        {
+          backgroundColor: darkMode ? baseBackgroundColor : darken(baseBackgroundColor, 0.1),
+          color: fontColor,
+
+
+        },
+      '& tr:nth-of-type(even):not([data-selected="true"]):not([data-pinned="true"]):hover > td':
+        {
+          backgroundColor: darken(baseBackgroundColor, 0.2),
+        },
+    }),
+  },
+  muiTablePaperProps: {
+    sx: {
+      '& .MuiPopover-paper': {
+        padding: 0,
+      },
+      '& .MuiMenu-paper': {
+        padding: 0,
+      },
+    },
+  },
+  mrtTheme: (theme) => ({
+    baseBackgroundColor: darkMode ? baseBackgroundColor : darken(baseBackgroundColor, 0.1),
+    draggingBorderColor: theme.palette.secondary.main,
+    
+  }),
+  muiTableHeadCellProps: {
+    sx: {
+      fontWeight: 'bold',
+      color: fontColor,
+      '.MuiIconButton-root': {
+        color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+      },
+    },
+  },
+  muiTopToolbarProps :  {
+    sx: {
+      '.MuiIconButton-root': {
+        color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+      },
+      '.MuiPaper-root': {
+        padding: '0rem',
+       }
+    },
+  },
+  muiBottomToolbarProps :  {
+    sx: {
+      '.MuiIconButton-root': {
+        color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+      },
+      '.MuiTypography-root': {
+        color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+      },
+      '.MuiSelect-select': {
+        color: darkMode ? theme.palette.common.white : theme.palette.common.black,
+      },
+    },
+  },
+  muiTablePaperProps : {
+    sx: {
+      '.MuiPaper-elevation	': {
+        padding: '0rem',
+       }
+    },
+  },
+});
 
   return (
     <div className={classes.tableResponsive}>

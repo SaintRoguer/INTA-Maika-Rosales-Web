@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import ImageNotesTable from "components/Modal/ImageNoteModal/ImageNotesTable";
+import { useMaterialUIController} from "context";
+import MDTypography from "components/MDTypography";
 
 const styles = {
   fontFamily: "sans-serif",
@@ -10,6 +12,8 @@ const styles = {
 export default function ImageNoteModal(props) {
   const [open, setOpen] = React.useState(true);
   const { onUpdate } = props;
+  const [controller] = useMaterialUIController();
+  const { darkMode } = controller;
 
 
   const onCloseModal = () => {
@@ -39,20 +43,24 @@ export default function ImageNoteModal(props) {
         />
       );
     } else {
-      return <p> La imágen no tiene ninguna nota. </p>;
+      return <MDTypography color= {darkMode? "white" : "black" } sx={{fontSize:"22.5px"}}>
+                  La imágen no tiene ninguna nota. 
+                </MDTypography>
     }
   };
 
   return (
     <div>
       <SweetAlert
-        title={props.title}
+        title={<MDTypography color= {darkMode? "white" : "black" } style={{fontSize:"37.5px"}}>{props.title}</MDTypography>}
         onConfirm={() => {}}
         onCancel={() => onCloseModal()}
         custom
         showConfirm={false}
         showCancel={false}
         showCloseButton
+        style={{backgroundColor: darkMode ? "rgba(32,41,64, 1)" : "rgba(255, 255, 255, 1)"}}
+
       >
         {showNotes()}
       </SweetAlert>

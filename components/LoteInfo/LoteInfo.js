@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { styled } from '@mui/material/styles';
 import GridItem from "components/Grid/GridItem.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
+import Card from "@mui/material/Card";
+import CardBody from "@mui/material/Card";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import LoteImages from "../LoteImages/LoteImages";
 import SideImageInfo from "./SideImageInfo";
@@ -11,7 +10,7 @@ import LotePasturas from "../LotePasturas/LotePasturas";
 import ImageIcon from "@mui/icons-material/Image";
 import ArtTrackIcon from "@mui/icons-material/ArtTrack";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import moment from "moment";
+import moment, { min } from "moment";
 import "moment/locale/es";
 import { updateLote } from "../../lib/db-client";
 import InfoAverage from "./InfoAverage";
@@ -19,6 +18,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditionModal from "../Modal/EditionModal";
+
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+import {
+  useMaterialUIController,
+} from "context";
+
 
 const PREFIX = 'LoteInfo';
 
@@ -55,6 +61,11 @@ export default function LoteInfo(props) {
   const [showHelp, setShowHelp] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  
+  const [controller, dispatch] = useMaterialUIController();
+  const {
+    darkMode,
+  } = controller;
 
 
 
@@ -82,17 +93,31 @@ export default function LoteInfo(props) {
 
   const cardHeader = () => {
     return (
-      <CardHeader color="primary">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h4 className={classes.cardTitleWhite}>
-            {loteData.description} - Creado a las{" "}
-            {moment(
-              new Date(loteData.creationDate._seconds * 1000),
-              "dd/mm/yyyy"
-            ).format("HH:mm")}{" "}
-            hs
-          </h4>
-          {isMinimized ? (
+      <MDBox
+                mx={2}
+                mt={isMinimized ? "" :-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="dark"
+                borderRadius="lg"
+                coloredShadow="dark"
+                sx={{flexGrow: 1,direction:"row",minWidth:isMinimized ? "300px" : "" }}
+              >
+        <div style={{ display: "flex"}}>
+          <MDTypography color= "white"  fontSize="15px" fontWeight="bold" direction="row"   sx={{flexGrow: 1,direction:"row",}}>  
+
+              {loteData.description} - Creado a las{" "}
+              {moment(
+                new Date(loteData.creationDate._seconds * 1000),
+                "dd/mm/yyyy"
+              ).format("HH:mm")}{" "}
+              hs
+                                  
+          </MDTypography>
+          <MDTypography color= "white"  fontSize="15px" fontWeight="bold" justifySelf="flex-end"
+          >  
+             {isMinimized ? (
             <div style={{ display: "flex" }}>
               <EditIcon
                 onClick={() => {
@@ -115,8 +140,11 @@ export default function LoteInfo(props) {
               />
             </div>
           )}
+          </MDTypography>
+
+
         </div>
-      </CardHeader>
+      </MDBox>
     );
   };
 
@@ -137,28 +165,29 @@ export default function LoteInfo(props) {
   const showContent = () => {
     if (isMinimized) {
       return (
-        (<Root>
-          <GridItem xs={12} sm={12} md={6}>
-            <Card chart>{cardHeader()}</Card>
+        (<>
+          <GridItem xs={12} sm={12} md={6} sx={{mb:"10px"}}>
+            {cardHeader()}
           </GridItem>
           <GridItem xs={12} sm={12} md={6}></GridItem>
           {loteEditionModal()}
-        </Root>)
+        </>)
       );
     } else {
       return (
         <>
           <GridItem xs={12} sm={12} md={6}>
-            <Card chart>
+            <Card sx={{mt:"30px", mb:"30px"}} >
               {cardHeader()}
               <GridItem xs={12} sm={12} md={12}>
-                <h5>
-                  <strong>{loteData.images.length} imágenes</strong> y{" "}
-                  <strong>{loteData.pasturas.length} pasturas</strong> asociadas
-                </h5>
+                <MDTypography color={ darkMode ? "white" :"dark"}  fontSize="12px" fontWeight="bold" justifySelf="flex-end">
+              
+                    <strong>{loteData.images.length} imágenes</strong> y{" "}
+                    <strong>{loteData.pasturas.length} pasturas</strong> asociadas
+                </MDTypography>
               </GridItem>
 
-              <CardBody>
+              <Card sx={{pl:"20px", pr:"20px", pt:"20px", pb:"20px"}}>
                 <CustomTabs
                   title="Ver:"
                   headerColor="dark"
@@ -199,15 +228,15 @@ export default function LoteInfo(props) {
                     },
                   ]}
                 />
-              </CardBody>
+              </Card>
             </Card>
           </GridItem>
           <GridItem xs={12} sm={12} md={6}>
             {showHelp ? (
-              <h5>
+              <MDTypography color={ darkMode ? "white" :"dark"} sx={{fontSize:"16.6px"}}>
                 <strong>{loteData.description} </strong> - Seleccioná una imágen
                 para mostrar su información
-              </h5>
+              </MDTypography>
             ) : (
               ""
             )}

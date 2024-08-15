@@ -3,6 +3,13 @@ import {Gallery} from "react-grid-gallery";
 import Percentages from "./Percentages";
 import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes";
 import ImageNoteModal from "../Modal/ImageNoteModal/ImageNoteModal";
+import MDTypography from "components/MDTypography";
+import Icon from "@mui/material/Icon";
+import MDButton from "components/MDButton";
+
+import {
+  useMaterialUIController,
+} from "context";
 
 export default function SideImageInfo(props) {
   const { imageNumber, imageData, loteDetailId } = props;
@@ -67,24 +74,39 @@ export default function SideImageInfo(props) {
     setNotesData(data);
 
   };
+  const [controller, dispatch] = useMaterialUIController();
+  const {
+    darkMode,
+  } = controller;
 
   return (
     <>
-      <h6>
+      <MDTypography color={ darkMode ? "white" :"dark"} sx={{fontSize:"13.4px"}}>
         <strong>Imágen {imageNumber} - Detalles</strong>
-      </h6>
+      </MDTypography>
       {relatedImages()}
       {imagesCover()}
-      <div className="row" onClick={() => setShowNotes(true)}>
-        <SpeakerNotesIcon style={{ marginBottom: -2 }} />{" "}
-        <a href="#" style={{ color: "black" }}>
-          Ver{" "}
-          <strong style={{ textDecoration: "underline" }}>
-            notas ({notes ? notes.length : 0})
-          </strong>{" "}
-          de la imágen
-        </a>
-      </div>
+      <MDTypography color= {darkMode? "white" : "black" } >  
+            <div className="row" onClick={() => setShowNotes(true)}>
+              <Icon style={{ marginBottom: -2 }} >speaker_notes</Icon>{" "}
+                Ver{" "}
+                <MDButton
+                        onClick={() => setShowNotes(true)}
+                        target="_blank"
+                        rel="noreferrer"
+                        color={darkMode? "white" : "black" }
+                        variant="text"
+                        size="large"
+                        sx={{ whiteSpace: 'nowrap',minWidth:"max-content", padding:"0"}}
+
+                      >
+                <strong style={{ textDecoration: "underline" }}>
+                  notas ({notes ? notes.length : 0})
+                </strong>
+                </MDButton>
+                {" "}de la imágen
+            </div>
+            </MDTypography>
       {showNotes ? (
         <ImageNoteModal
           onCloseModal={async () => {

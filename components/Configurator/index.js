@@ -295,25 +295,25 @@ function Configurator() {
               Descargar app Android
           </MDButton>
         </MDBox>
-       <Divider />
-       <MDBox mt={3} mb={2}>
-      <FeedbackFish projectId="af88f33ebb78ee">
-        <MDButton
-          component="a"
-          href="#"
-          data-feedback-fish
-          color={darkMode ? "warning" : "dark"}
-          variant="outlined"
-          fullWidth
-        >
-          <Icon fontSize="small" color="warning">
-            warning
-          </Icon>
-          Dar feedback
-        </MDButton>
-      </FeedbackFish>
-    </MDBox>
+      <Divider />
+      <MDBox mt={3} mb={2}>
+        <FeedbackFish projectId="af88f33ebb78ee">
+          <MDButton
+            component="a"
+            href="#"
+            data-feedback-fish
+            color={darkMode ? "warning" : "dark"}
+            variant="outlined"
+            fullWidth
+          >
+            <Icon fontSize="small" color="warning">
+              warning
+            </Icon>
+            Dar feedback
+          </MDButton>
+        </FeedbackFish>
       </MDBox>
+    </MDBox>
     </ConfiguratorRoot>
   );
 }
