@@ -25,30 +25,9 @@ const sidebarStyle = (theme) => ({
     zIndex: "1",
     ...boxShadow,
     width: drawerWidth,
-    [theme.breakpoints.up("md")]: {
       width: drawerWidth,
       position: "fixed",
       height: "100%",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: drawerWidth,
-      ...boxShadow,
-      position: "fixed",
-      display: "block",
-      top: "0",
-      height: "100vh",
-      right: "0",
-      left: "auto",
-      zIndex: "1032",
-      visibility: "visible",
-      overflowY: "visible",
-      borderTop: "none",
-      textAlign: "left",
-      paddingRight: "0px",
-      paddingLeft: "0",
-      transform: `translate3d(${drawerWidth}px, 0, 0)`,
-      ...transition,
-    },
   },
 
   logo: {
@@ -300,11 +279,11 @@ const sidebarStyle = (theme) => ({
     overflowScrolling: "touch",
   },
   activePro: {
-    [theme.breakpoints.up("md")]: {
+    
       position: "absolute",
       width: "100%",
       bottom: "13px",
-    },
+    
   },
 });
 

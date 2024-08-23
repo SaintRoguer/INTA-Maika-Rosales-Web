@@ -1,12 +1,14 @@
-import React, { Component } from "react";
-import Router from "next/router";
-
-export default class Index extends Component {
-  componentDidMount = () => {
-    Router.push("/admin/sesiones");
+// pages/index.js
+export async function getServerSideProps(context) {
+  return {
+    redirect: {
+      destination: '/admin/sesiones',
+      permanent: false,
+    },
   };
+}
 
-  render() {
-    return <div />;
-  }
+export default function Home() {
+  // This component won't be rendered; redirection happens before this component is displayed.
+  return null;
 }

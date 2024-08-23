@@ -1,52 +1,32 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Admin from "layouts/Admin.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import Button from "components/CustomButtons/Button.js";
+import Card from "@mui/material/Card";
+
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import LoteInfo from "../../components/LoteInfo/LoteInfo";
-import DescriptionIcon from "@material-ui/icons/Description";
-import EventIcon from "@material-ui/icons/Event";
-import PersonIcon from "@material-ui/icons/Person";
-import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotes";
+import LoteInfo from "components/LoteInfo/LoteInfo";
 import SessionNoteModal from "../../components/Modal/SessionNoteModal/SessionNoteModal";
-import moment from "moment";
+import moment, { min } from "moment";
 import "moment/locale/es";
 import { getAllSessions, getSessionDetails } from "../../lib/db-admin";
 import generatePdf from "../../lib/pdfGeneratorSingleSession";
 import formatCsvDataSingleSession from "../../lib/formatCsvDataSingleSession";
 import { CSVLink } from "react-csv";
 
-const styles = {
-  cardCategoryWhite: {
-    color: "rgb(239,219,46)",
-    margin: "0",
-    fontSize: "14px",
-    marginTop: "0",
-    marginBottom: "0",
-  },
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-  },
-  rows: {
-    display: "inline-block",
-  },
-  row: {
-    display: "inline-block",
-  },
-};
+// Material Dashboard 2 React components
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+import Icon from "@mui/material/Icon";
+import Divider from '@mui/material/Divider';
 
-const useStyles = makeStyles(styles);
+
+import {
+  useMaterialUIController,
+} from "context";
+
 
 // This function gets called at build time
 export async function getStaticPaths() {
@@ -71,13 +51,12 @@ export async function getStaticProps(context) {
   sessionDetails = JSON.stringify(sessionDetails);
 
   return {
-    props: { sessionDetails }, // will be passed to the page component as props
+    props: { sessionDetails, sessionId }, // will be passed to the page component as props
     revalidate: 1, // In seconds
   };
 }
 
-function SessionDetail({ sessionDetails }) {
-  const classes = useStyles();
+function SessionDetail({ sessionDetails, sessionId }) {
   const [showNotes, setShowNotes] = useState(false);
   const router = useRouter();
 
@@ -85,7 +64,7 @@ function SessionDetail({ sessionDetails }) {
 
   //TODO: Poner esto en un use Effect?
   let sessionDetailsJSON = JSON.parse(sessionDetails);
-
+  const [notesData, setNotesData] = useState(sessionDetailsJSON.notes);
   //Only make request if sessionDetailsJson lotes length > 0 ?
   const { data: dataLotes, error: errorLotes } = useSWR(
     "/api/lotesDetails/" + router.query.sessionId,
@@ -123,97 +102,162 @@ function SessionDetail({ sessionDetails }) {
       //La sesión no tiene lotes
       return (
         <GridItem xs={12} sm={12} md={12}>
-          <h4>
-            Esta sesión todavía <strong>no tiene ningún lote</strong> cargado.
+          <MDTypography variant="h4" color= {darkMode? "white" : "black" } >  
+              Esta sesión todavía <strong>no tiene ningún lote</strong> cargado.
             ¡Comenza a crearlos desde la aplicación móvil!
-          </h4>
-        </GridItem>
+            </MDTypography>
+          </GridItem>
       );
     }
   };
 
+  const handleOnUpdate = (data) => {
+    const dataArray = Object.values(data);
+    for (let i = 0; i < data.length; i++) {
+      dataArray[i] = data[i].note;
+    }
+    console.log("data", dataArray);
+    setNotesData(dataArray);
+  };
+
+  const [controller, dispatch] = useMaterialUIController();
+  const {
+    darkMode,
+  } = controller;
+
   return (
     <div>
-      <GridItem xs={12} sm={4} md={3}>
-        <Button
-          simple
-          size="lg"
-          color="primary"
-          onClick={goToDashboard}
-          style={{ paddingLeft: "initial" }}
-        >
-          <i className="material-icons">chevron_left</i> Volver a lista de
-          sesiones
-        </Button>
-      </GridItem>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12} style={{ marginBottom: 20 }}>
-          <Card plain>
-            <CardHeader plain color="dark">
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <h4 className={classes.cardTitleWhite}>
-                  <EventIcon style={{ marginBottom: -5 }} /> Sesión creada el{" "}
-                  <strong>
-                    {moment(
-                      new Date(sessionDetailsJSON.date._seconds * 1000)
-                    ).format("L")}
-                  </strong>{" "}
-                  a las{" "}
-                  {moment(
-                    new Date(sessionDetailsJSON.date._seconds * 1000),
-                    "dd/mm/yyyy"
-                  ).format("HH:mm")}{" "}
-                  hs
-                </h4>
-                {dataLotes && dataLotes.length > 0 ? (
-                  <div
-                    style={{
-                      display: "inline-block",
-                    }}
-                  >
-                    <CSVLink {...formatCsvDataSingleSession(dataLotes)}>
-                      <Button color="rose" style={{ textAlign: "center" }}>
-                        <strong>Descargar CSV</strong>
-                      </Button>
-                    </CSVLink>
-                    <Button
-                      color="success"
-                      onClick={() => generatePdf(dataLotes)}
-                      style={{ marginLeft: 10, textAlign: "center" }}
+    
+          <Card style={{backgroundColor: darkMode ? "#1f283e" :'#42424a'}}>
+                <MDBox sx={{ display: "flex", pr:"0.5rem", pt:"0.5rem", pl:"0.5rem", flexDirection: 'row', flexGrow: 1,}}> 
+                  <MDBox 
+                    sx={{ whiteSpace: 'nowrap',flexGrow: 1, }}
+                  >   
+                  <MDTypography variant="h4" color="white" alignItems="center" lineHeight={1} fontSize="20px"  sx={{ fontWeight: 'light', padding:"0.5rem" }}>
+                    <Icon fontSize="small" color="light">
+                        event
+                        </Icon> Sesión creada el{" "}
+                    
+                        {moment(
+                          new Date(sessionDetailsJSON.date.seconds * 1000)
+                        ).format("L")}
+                      {" "}
+                      a las{" "}
+                      {moment(
+                        new Date(sessionDetailsJSON.date.seconds * 1000),
+                        "dd/mm/yyyy"
+                      ).format("HH:mm")}{" "}
+                      hs
+                      </MDTypography>
+                      </MDBox>
+                  {dataLotes && dataLotes.length > 0 ? (
+                    <MDBox alignItems="center"
+                      spacing={1}
+                      useFlexGap
+                      justifyContent="space-around"
+                      sx={{ display: "flex",flexDirection: 'row', pr:"0.5rem", pt:"0.5rem", minWidth:"400px"}}
                     >
-                      <strong>Descargar PDF</strong>
-                    </Button>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
+                    
+                    <CSVLink {...formatCsvDataSingleSession(dataLotes)} sx={{marginRight:"auto"}} >
 
-              <p className={classes.cardCategoryWhite}>
-                <PersonIcon style={{ marginBottom: -4 }} /> Creada por{" "}
-                <strong>{sessionDetailsJSON.user}</strong>
-              </p>
-            </CardHeader>
+                      <MDButton       
+                        target="_blank"
+                        rel="noreferrer"
+                        color="success"
+                        variant="outlined"
+                        size="small"
+                        sx={{ whiteSpace: 'nowrap', minWidth:"max-content", }}
+                      >
+                          <Icon fontSize="small" color="success" >
+                          article
+                          </Icon>
+                          <MDTypography color="success"  sx={{ fontSize: 16}} >
+                            Descargar CSV
+                          </MDTypography>
+              
+                       </MDButton>
+                    </CSVLink>
+
+                      <MDButton
+                        onClick={() => generatePdf(dataLotes)}
+                        target="_blank"
+                        rel="noreferrer"
+                        color="error"
+                        variant="outlined"
+                        size="small"
+                        sx={{ whiteSpace: 'nowrap',minWidth:"max-content"}}
+
+                      >
+                        <Icon fontSize="small" color="light">
+                        picture_as_pdf_two_tone
+                        </Icon>
+                        <MDTypography color="error" direction="row" useFlexGap sx={{ fontSize: 16, whiteSpace: 'nowrap',minWidth:"max-content" }}>
+                          Descargar PDF
+                        </MDTypography>
+
+                      </MDButton>
+                    </MDBox>
+                  ) : (
+                    ""
+                  )}
+                  </MDBox>
+                  <MDBox spacing={{ xs: 1, sm: 2 }}
+                    direction="row" useFlexGap
+                    pl="0.5rem"
+                    pb="0.5rem"
+                    >
+                  <MDTypography variant="h6" color="white" alignItems="center" lineHeight={1}  padding="0.5rem" verticalAlign="text-top">
+                    <Icon fontSize="small" color="light">
+                          person
+                          </Icon> Creada por{" "}
+                      <strong>{sessionDetailsJSON.user}</strong>
+                  </MDTypography>
+              </MDBox>
           </Card>
+          <Divider orientation="horizontal" variant="middle" flexItem   sx={{
+            opacity: 
+              darkMode
+                ? 0.6
+                : 1,
+          }}/>
+
 
           {/* Session Description and Notes */}
-          <div className={classes.rows}>
-            <div className={classes.row} style={{ marginBottom: 2 }}>
-              <DescriptionIcon style={{ marginBottom: -2 }} />{" "}
-              <strong>Descripción: </strong>
-              {sessionDetailsJSON.description}
-            </div>
+          <MDBox sx={{ display: "flex", flexDirection: 'column', flexGrow: 1,}}> 
+            <MDBox >
+          
+              <MDTypography color= {darkMode? "white" : "black" } >  
+                <Icon style={{ marginBottom: -2 }} >description</Icon>
+                <strong> Descripción: </strong>
+                  {sessionDetailsJSON.description}
+              </MDTypography>
+            </MDBox>
+
+            <MDTypography color= {darkMode? "white" : "black" } >  
             <div className="row" onClick={() => setShowNotes(true)}>
-              <SpeakerNotesIcon style={{ marginBottom: -2 }} />{" "}
-              <a href="#" style={{ color: "black" }}>
+              <Icon style={{ marginBottom: -2 }} >speaker_notes</Icon>{" "}
                 Ver{" "}
+                <MDButton
+                        onClick={() => setShowNotes(true)}
+                        target="_blank"
+                        rel="noreferrer"
+                        color={darkMode? "white" : "black" }
+                        variant="text"
+                        size="large"
+                        sx={{ whiteSpace: 'nowrap',minWidth:"max-content", padding:"0"}}
+
+                      >
                 <strong style={{ textDecoration: "underline" }}>
                   notas ({sessionDetailsJSON.notes.length})
-                </strong>{" "}
-                de la sesión
-              </a>
+                </strong>
+                </MDButton>
+                {" "}de la sesión
             </div>
-          </div>
+            </MDTypography>
+
+          </MDBox>
         </GridItem>
 
         {showNotes ? (
@@ -222,8 +266,10 @@ function SessionDetail({ sessionDetails }) {
               setShowNotes(false);
             }}
             title="Notas de la sesión"
-            notes={sessionDetailsJSON.notes}
+            notes={notesData}
             sessionDetailsId={sessionDetailsJSON.id}
+            onUpdate={handleOnUpdate}
+            sessionDetailIDDoc={sessionId}
           />
         ) : (
           ""

@@ -15,8 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "@material-ui/icons/Dashboard";
-import Help from "@material-ui/icons/Help";
+import Dashboard from "@mui/icons-material/Dashboard";
+import Help from "@mui/icons-material/Help";
 
 const dashboardRoutes = [
   {

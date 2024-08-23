@@ -2,6 +2,10 @@ import React from "react";
 import PercentagesCard from "./PercentagesCard/PercentagesCard";
 import GridContainer from "components/Grid/GridContainer";
 import GridItem from "components/Grid/GridItem.js";
+import MDTypography from "components/MDTypography";
+import {
+  useMaterialUIController,
+} from "context";
 
 export default function InfoAverage(props) {
   const {
@@ -11,6 +15,10 @@ export default function InfoAverage(props) {
     totalImagesBefore,
     totalImagesAfter,
   } = props;
+  const [controller, dispatch] = useMaterialUIController();
+  const {
+    darkMode,
+  } = controller;
 
   const percentagesBefore = getPercentagesBefore(
     averageBefore,
@@ -22,9 +30,9 @@ export default function InfoAverage(props) {
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
-          <h3>
+        <MDTypography color={ darkMode ? "white" :"dark"} sx={{fontSize:"23.4px"}}>
             <strong>{title}</strong>
-          </h3>
+         </MDTypography>
         </GridItem>
         <GridItem xs={12} sm={12} md={6}>
           <PercentagesCard
@@ -32,10 +40,10 @@ export default function InfoAverage(props) {
             percentages={percentagesBefore}
             isAverage={true}
           />
-          <h6>
+          <MDTypography color={ darkMode ? "white" :"dark"} sx={{fontSize:"13.4px"}}>
             <strong>Cantidad de imágenes antes: {totalImagesBefore}</strong>
-          </h6>
-        </GridItem>
+            </MDTypography>
+            </GridItem>
 
         <GridItem xs={12} sm={12} md={6}>
           <PercentagesCard
@@ -43,10 +51,10 @@ export default function InfoAverage(props) {
             percentages={percentagesAfter}
             isAverage={true}
           />
-          <h6>
-            <strong>Cantidad de imágenes después: {totalImagesAfter}</strong>
-          </h6>
-        </GridItem>
+          <MDTypography color={ darkMode ? "white" :"dark"} sx={{fontSize:"13.4px"}}>
+          <strong>Cantidad de imágenes después: {totalImagesAfter}</strong>
+          </MDTypography>
+          </GridItem>
       </GridContainer>
     </div>
   );

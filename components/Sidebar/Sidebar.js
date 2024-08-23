@@ -4,14 +4,13 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { useRouter } from "next/router";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Icon from "@material-ui/core/Icon";
+import makeStyles from '@mui/styles/makeStyles';
+import Drawer from "@mui/material/Drawer";
+import Hidden from "@mui/material/Hidden";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Icon from "@mui/material/Icon";
 // core components
 import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
 import Image from "next/image";
@@ -78,7 +77,7 @@ export default function Sidebar(props) {
         target="_blank"
       >
         <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
+          <img src={logo['src']} alt="logo" className={classes.img} />
         </div>
         {logoText}
       </a>
@@ -88,7 +87,7 @@ export default function Sidebar(props) {
           alt="logo inta"
           width={120}
           height={64}
-          style={{
+          className={{
             flex: "auto",
           }}
           onClick={() =>
@@ -100,17 +99,18 @@ export default function Sidebar(props) {
           alt="logo dcic"
           width={121}
           height={64}
-          style={{
+          className={{
             flex: "auto",
           }}
           onClick={() => window.open("https://cs.uns.edu.ar/home/", "_blank")}
+          sx={{ cursor: 'pointer' }}
         />
         <Image
           src="/uns-logo.png"
           alt="logo uns"
           width={121}
           height={64}
-          style={{
+          className={{
             flex: "auto",
           }}
           onClick={() => window.open("https://www.uns.edu.ar/", "_blank")}
@@ -141,12 +141,12 @@ export default function Sidebar(props) {
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
+              style={{ backgroundImage: "url(" + image['src'] + ")" }}
             />
           ) : null}
         </Drawer>
       </Hidden>
-      <Hidden smDown implementation="css">
+      <Hidden mdDown implementation="css">
         <Drawer
           anchor={"left"}
           variant="permanent"
@@ -160,7 +160,7 @@ export default function Sidebar(props) {
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
+              style={{ backgroundImage: "url(" + image['src'] + ")" }}
             />
           ) : null}
         </Drawer>
@@ -179,8 +179,8 @@ Sidebar.propTypes = {
     "orange",
     "red",
   ]),
-  logo: PropTypes.string,
-  image: PropTypes.string,
+  logo: PropTypes.object,
+  image: PropTypes.object,
   logoText: PropTypes.string,
   routes: PropTypes.arrayOf(PropTypes.object),
   open: PropTypes.bool,

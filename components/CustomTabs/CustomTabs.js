@@ -4,17 +4,18 @@ import classNames from "classnames";
 // nodejs library to set properties for components
 import PropTypes from "prop-types";
 
-// material-ui components
-import { makeStyles } from "@material-ui/core/styles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import makeStyles from '@mui/styles/makeStyles';
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 // core components
-import Card from "components/Card/Card.js";
+import Card from "@mui/material/Card";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/components/customTabsStyle.js";
-
+import {
+  useMaterialUIController,
+} from "context";
 const useStyles = makeStyles(styles);
 
 export default function CustomTabs(props) {
@@ -27,8 +28,14 @@ export default function CustomTabs(props) {
   const cardTitle = classNames({
     [classes.cardTitle]: true,
   });
+  const [controller, dispatch] = useMaterialUIController();
+  const {
+    darkMode,
+  } = controller;
+
+  //backgroundColor: darkMode? "#344767": "white"
   return (
-    <Card plain={plainTabs}>
+    <Card sx={{p:"20px", backgroundColor: darkMode ? "#1a2035": "white"}} >
       <CardHeader color={headerColor} plain={plainTabs}>
         {title !== undefined ? <div className={cardTitle}>{title}</div> : null}
         <Tabs
@@ -41,6 +48,7 @@ export default function CustomTabs(props) {
           }}
           variant="scrollable"
           scrollButtons="auto"
+          sx={{backgroundColor:"#42424a"}}
         >
           {tabs.map((prop, key) => {
             var icon = {};

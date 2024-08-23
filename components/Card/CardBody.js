@@ -1,30 +1,31 @@
 import React from "react";
-// nodejs library that concatenates classes
 import classNames from "classnames";
-// nodejs library to set properties for components
 import PropTypes from "prop-types";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-// @material-ui/icons
-
-// core components
+import { styled } from '@mui/system';
 import styles from "assets/jss/nextjs-material-dashboard/components/cardBodyStyle.js";
 
-const useStyles = makeStyles(styles);
+// Convert styles to styled components
+const StyledCardBody = styled('div')(({ theme }) => ({
+  ...styles.cardBody,
+  '&.plain': {
+    ...styles.cardBodyPlain,
+  },
+  '&.profile': {
+    ...styles.cardBodyProfile,
+  },
+}));
 
 export default function CardBody(props) {
-  const classes = useStyles();
   const { className, children, plain, profile, ...rest } = props;
   const cardBodyClasses = classNames({
-    [classes.cardBody]: true,
-    [classes.cardBodyPlain]: plain,
-    [classes.cardBodyProfile]: profile,
+    plain,
+    profile,
     [className]: className !== undefined,
   });
   return (
-    <div className={cardBodyClasses} {...rest}>
+    <StyledCardBody className={cardBodyClasses} {...rest}>
       {children}
-    </div>
+    </StyledCardBody>
   );
 }
 

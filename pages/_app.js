@@ -16,69 +16,62 @@
 
 */
 import React from "react";
-import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
-import Router from "next/router";
-
-import PageChange from "components/PageChange/PageChange.js";
-
-import "assets/css/nextjs-material-dashboard.css?v=1.0.0";
 import { SWRConfig } from "swr";
+import CssBaseline from "@mui/material/CssBaseline";
 
-Router.events.on("routeChangeStart", (url) => {
-  document.body.classList.add("body-page-transition");
-  ReactDOM.render(
-    <PageChange path={url} showText={true} />,
-    document.getElementById("page-transition")
+import { MaterialUIControllerProvider, useMaterialUIController } from "context";
+import theme from "assets/theme";
+import themeDark from "assets/theme-dark";
+import { ThemeProvider } from "@mui/material/styles";
+const MyApp = ({ Component, pageProps }) => {
+  const Layout = Component.layout || (({ children }) => <>{children}</>);
+  const [controller, dispatch] = useMaterialUIController();
+    const {
+        darkMode,
+    } = controller;
+
+  return (
+    <React.Fragment>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>Cobertura y gestión de suelos</title>
+      </Head>
+
+      <SWRConfig
+        value={{
+          fetcher: async (...args) => {
+            const res = await fetch(...args);
+            return res.json();
+          },
+        }}
+      >
+        <Layout>
+            <ThemeProvider theme={darkMode ? themeDark : theme}>
+              <CssBaseline />
+                <Component {...pageProps} />
+            </ThemeProvider>
+        </Layout>
+      </SWRConfig>
+    </React.Fragment>
   );
-});
-Router.events.on("routeChangeComplete", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});
-Router.events.on("routeChangeError", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});
+};
 
-export default class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
-    let pageProps = {};
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps };
-  }
-  render() {
-    const { Component, pageProps } = this.props;
-
-    const Layout = Component.layout || (({ children }) => <>{children}</>);
-
-    return (
-      <React.Fragment>
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          />
-          <title>CGS - Cobertura y gestión de suelos</title>
-        </Head>
-        <SWRConfig
-          value={{
-            fetcher: async (...args) => {
-              const res = await fetch(...args);
-              return res.json();
-            },
-          }}
-        >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SWRConfig>
-      </React.Fragment>
-    );
-  }
+MyApp.getInitialProps = async (appContext) => {
+  const appProps = await App.getInitialProps(appContext)
+  return { ...appProps}
 }
+
+function AppWrapper(props) {
+  return (
+    <MaterialUIControllerProvider>
+      <MyApp {...props} />
+    </MaterialUIControllerProvider>
+  );
+}
+
+export default AppWrapper;
