@@ -31,8 +31,8 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
 // Material Dashboard 2 React example components
-import DefaultNavbarLink from "examples/Navbars/DefaultNavbar/DefaultNavbarLink";
-import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMobile";
+import DefaultNavbarLink from "components/Navbars copy/DefaultNavbar/DefaultNavbarLink";
+import DefaultNavbarMobile from "components/Navbars copy/DefaultNavbar/DefaultNavbarMobile";
 
 // Material Dashboard 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
@@ -104,7 +104,7 @@ function DefaultNavbar({ transparent, light, action }) {
       >
         <MDBox
           component={Link}
-          to="/"
+          href="/"
           py={transparent ? 1.5 : 0.75}
           lineHeight={1}
           pl={{ xs: 0, lg: 1 }}
@@ -134,7 +134,7 @@ function DefaultNavbar({ transparent, light, action }) {
             <MDBox display={{ xs: "none", lg: "inline-block" }}>
               <MDButton
                 component={Link}
-                to={action.route}
+                href={action.route}
                 variant="gradient"
                 color={action.color ? action.color : "info"}
                 size="small"

@@ -30,7 +30,7 @@ function DefaultNavbarLink({ icon, name, route, light }) {
   return (
     <MDBox
       component={Link}
-      to={route}
+      href={route}
       mx={1}
       p={1}
       display="flex"
