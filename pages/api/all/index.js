@@ -1,4 +1,6 @@
-import firebase from "../../../configuration/firebase";
+import admin from "../../../configuration/firebaseAdmin";
+
+const firebase = admin.firestore();
 
 export default async (req, res) => {
   let dataResult = [];

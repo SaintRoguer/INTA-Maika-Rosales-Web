@@ -20,4 +20,4 @@ try {
   }
 }
 
-export default admin.firestore();
+export default admin;
