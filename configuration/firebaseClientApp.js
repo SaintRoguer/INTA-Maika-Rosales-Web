@@ -1,8 +1,6 @@
-/*import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";*/
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-//import {getAuth} from 'firebase/auth'
+import {getAuth} from 'firebase/auth'
 
 const clientCredentials = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -22,7 +20,6 @@ const app = !getApps().length ? initializeApp(clientCredentials) : getApp();
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-//const auth = getAuth(app);
-
-export default { app, db };
+export default { app, auth };
