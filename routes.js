@@ -15,20 +15,20 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "@mui/icons-material/Dashboard";
-import Help from "@mui/icons-material/Help";
+import Icon from "@mui/material/Icon";
+
 
 const dashboardRoutes = [
   {
     path: "/sesiones",
     name: "Sesiones",
-    icon: Dashboard,
+    icon: <Icon fontSize="small">computer</Icon>,
     layout: "/admin",
   },
   {
     path: "/ayuda",
     name: "Ayuda",
-    icon: Help,
+    icon: <Icon fontSize="small">help</Icon>,
     layout: "/admin",
   },
 ];

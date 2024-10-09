@@ -2,7 +2,7 @@
 export async function getServerSideProps(context) {
   return {
     redirect: {
-      destination: '/admin/sesiones',
+      destination: '/sesiones',
       permanent: false,
     },
   };

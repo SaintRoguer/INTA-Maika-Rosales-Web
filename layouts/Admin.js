@@ -55,52 +55,14 @@ export default function Admin({ children, ...rest }) {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-
-  const getIcon = (name) => {
-    switch (name.toLowerCase()) {
-      case "sesiones":
-        return <Icon fontSize="small">computer</Icon>;
-      case "ayuda":
-        return <Icon fontSize="small">help</Icon>;
-      default:
-        return <Icon fontSize="small">dashboard</Icon>;
-    }
-  };
-
   const transformedRoutes = routes.map(route => ({
     type: "collapse",
     name: route.name,
-    key: "admin/" + route.path.substring(1),
-    icon: getIcon(route.name),
+    key: route.path.substring(1),
+    icon: route.icon,
     route: route.path,
     component: <Admin />,
   }));
-
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
-
-  const configsButton = (
-    <MDBox
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      width="3.25rem"
-      height="3.25rem"
-      bgColor="white"
-      shadow="sm"
-      borderRadius="50%"
-      position="fixed"
-      right="2rem"
-      bottom="4rem"
-      zIndex={99}
-      color="dark"
-      sx={{ cursor: "pointer" }}
-      onClick={handleConfiguratorOpen}
-    >
-      <Icon fontSize="small" color="inherit">
-        settings
-      </Icon>
-    </MDBox>
-  );
   
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
