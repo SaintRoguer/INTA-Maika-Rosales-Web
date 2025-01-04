@@ -26,11 +26,24 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
+    path: "/profile",
+    name: "Perfil",
+    icon: <Icon fontSize="small">person</Icon>,
+    layout: "/admin",
+  },
+  {
     path: "/ayuda",
     name: "Ayuda",
     icon: <Icon fontSize="small">help</Icon>,
     layout: "/admin",
   },
+  {
+    path: "/admin",
+    name: "Admin",
+    icon: <Icon fontSize="small">admin_panel_settings</Icon>,
+    layout: "/admin",
+  },
 ];
 
 export default dashboardRoutes;
+

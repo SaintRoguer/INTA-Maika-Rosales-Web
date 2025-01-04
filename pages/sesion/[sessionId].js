@@ -90,7 +90,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
         new Date(a.loteData.creationDate._seconds * 1000).getTime()
     );
 
-    if (dataLotes.length > 0) {
+    if (dataLotes && dataLotes.length > 0) {
       return (
         <>
           {dataLotes.map((lote) => (
@@ -102,7 +102,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
       //La sesión no tiene lotes
       return (
         <GridItem xs={12} sm={12} md={12}>
-          <MDTypography variant="h4" color= {darkMode? "white" : "black" } >  
+          <MDTypography variant="h4" color= {darkMode? "white" : "dark" } >  
               Esta sesión todavía <strong>no tiene ningún lote</strong> cargado.
             ¡Comenza a crearlos desde la aplicación móvil!
             </MDTypography>
@@ -116,7 +116,6 @@ function SessionDetail({ sessionDetails, sessionId }) {
     for (let i = 0; i < data.length; i++) {
       dataArray[i] = data[i].note;
     }
-    console.log("data", dataArray);
     setNotesData(dataArray);
   };
 
@@ -141,12 +140,12 @@ function SessionDetail({ sessionDetails, sessionId }) {
                         </Icon> Sesión creada el{" "}
                     
                         {moment(
-                          new Date(sessionDetailsJSON.date.seconds * 1000)
+                          new Date(sessionDetailsJSON.date._seconds * 1000)
                         ).format("L")}
                       {" "}
                       a las{" "}
                       {moment(
-                        new Date(sessionDetailsJSON.date.seconds * 1000),
+                        new Date(sessionDetailsJSON.date._seconds * 1000),
                         "dd/mm/yyyy"
                       ).format("HH:mm")}{" "}
                       hs
@@ -155,7 +154,6 @@ function SessionDetail({ sessionDetails, sessionId }) {
                   {dataLotes && dataLotes.length > 0 ? (
                     <MDBox alignItems="center"
                       spacing={1}
-                      useFlexGap
                       justifyContent="space-around"
                       sx={{ display: "flex",flexDirection: 'row', pr:"0.5rem", pt:"0.5rem", minWidth:"400px"}}
                     >
@@ -193,7 +191,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
                         <Icon fontSize="small" color="light">
                         picture_as_pdf_two_tone
                         </Icon>
-                        <MDTypography color="error" direction="row" useFlexGap sx={{ fontSize: 16, whiteSpace: 'nowrap',minWidth:"max-content" }}>
+                        <MDTypography color="error" direction="row"  sx={{ fontSize: 16, whiteSpace: 'nowrap',minWidth:"max-content" }}>
                           Descargar PDF
                         </MDTypography>
 
@@ -204,7 +202,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
                   )}
                   </MDBox>
                   <MDBox spacing={{ xs: 1, sm: 2 }}
-                    direction="row" useFlexGap
+                    direction="row" 
                     pl="0.5rem"
                     pb="0.5rem"
                     >
@@ -228,14 +226,14 @@ function SessionDetail({ sessionDetails, sessionId }) {
           <MDBox sx={{ display: "flex", flexDirection: 'column', flexGrow: 1,}}> 
             <MDBox >
           
-              <MDTypography color= {darkMode? "white" : "black" } >  
+              <MDTypography color= {darkMode? "white" : "dark" } >  
                 <Icon style={{ marginBottom: -2 }} >description</Icon>
                 <strong> Descripción: </strong>
                   {sessionDetailsJSON.description}
               </MDTypography>
             </MDBox>
 
-            <MDTypography color= {darkMode? "white" : "black" } >  
+            <MDTypography color= {darkMode? "white" : "dark" } >  
             <div className="row" onClick={() => setShowNotes(true)}>
               <Icon style={{ marginBottom: -2 }} >speaker_notes</Icon>{" "}
                 Ver{" "}
@@ -243,14 +241,14 @@ function SessionDetail({ sessionDetails, sessionId }) {
                         onClick={() => setShowNotes(true)}
                         target="_blank"
                         rel="noreferrer"
-                        color={darkMode? "white" : "black" }
+                        color={darkMode? "white" : "dark" }
                         variant="text"
                         size="large"
                         sx={{ whiteSpace: 'nowrap',minWidth:"max-content", padding:"0"}}
 
                       >
                 <strong style={{ textDecoration: "underline" }}>
-                  notas ({sessionDetailsJSON.notes.length})
+                   ({sessionDetailsJSON.notes ? sessionDetailsJSON.notes.length : 0}) Notas
                 </strong>
                 </MDButton>
                 {" "}de la sesión

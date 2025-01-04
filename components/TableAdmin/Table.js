@@ -15,7 +15,9 @@ import { useMaterialUIController} from "context";
 
 
 import { darken, lighten, useTheme } from '@mui/material';
-import { color, padding } from "@mui/system";
+
+import MDButton from "components/MDButton";
+
 
 
 export default function CustomTable(props) {
@@ -23,8 +25,6 @@ export default function CustomTable(props) {
 
   const [validationErrors, setValidationErrors] = useState({});
   const { tableHead, tableData } = props;
-  const [isEditing, setIsEditing] = useState(false); // Track editing state
-
 
   const [columns, setColumns] = useState(tableHead);
   const [data, setData] = useState(tableData);
@@ -45,9 +45,6 @@ export default function CustomTable(props) {
    const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
 
   const goToSessionDetail = (rowData) => {
-    /*router.push("/sesion/[id]", `/sesion/${rowData.id}`, {
-      shallow: true,
-    });*/
     window.location.replace(`/sesion/${rowData}`);
   };
    //UPDATE action
@@ -57,7 +54,6 @@ export default function CustomTable(props) {
       setValidationErrors(newValidationErrors);
       return;//algun modal o tooltip, mejor tooltip
     }
-    setIsEditing(true); // Disable row clicks while saving
 
     new Promise((resolve, reject) => {
       setTimeout(async () => {
@@ -74,8 +70,6 @@ export default function CustomTable(props) {
         resolve();
       }, 1000);
     }),
-    setIsEditing(false); // Re-enable row clicks after saving
-
     table.setEditingRow(null); //exit editing mode
   };
 
@@ -99,37 +93,25 @@ export default function CustomTable(props) {
     },
     displayColumnDefOptions: {
       'mrt-row-actions': {
-        header: 'Editar'
-      }
-    },
-    muiTableBodyRowProps: ({ row }) => ({
-      onClick: !isEditing
-        ? (event) => {
-            const columnIndex = event.target.cellIndex;
-            if (columnIndex !== undefined) goToSessionDetail(row.id);
-          }
-        : undefined, // Disable click when editing
-      sx: {
-        cursor: isEditing ? 'not-allowed' : 'pointer', // Change cursor style
+        header: 'Acciones',
+        size: 50,
+        muiTableHeadCellProps: {
+            align: 'center', //change head cell props
+          }, 
       },
-    }),
-    onEditingRowCancel: () => (setValidationErrors({}),setIsEditing(false)),
+    },
+    onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveRow,
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Editar">
-          <IconButton
-            onClick={() => {
-              setIsEditing(true); // Set editing state on row action
-              table.setEditingRow(row);
-            }}
-          >
-            <Icon
-              sx={{ color: darkMode ? '#FFFFFF' : '#000000' }}
-              fontSize="small"
-            >
-              edit
-            </Icon>
+          <IconButton onClick={() => table.setEditingRow(row)}>
+            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">edit</Icon>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Eliminar">
+          <IconButton onClick={() => table.delete(row)}>
+            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">person_remove</Icon>
           </IconButton>
         </Tooltip>
       </Box>
@@ -232,6 +214,16 @@ export default function CustomTable(props) {
          }
       },
     },
+    renderTopToolbarCustomActions : () => (
+      <MDButton 
+        variant="gradient" 
+        color="dark"
+        onClick={() => alert("Button clicked!")}
+      >
+        <Icon sx={{ fontWeight: "bold" }}>person_add</Icon>
+        &nbsp;Añadir nuevo usuario
+      </MDButton>
+    ),
   });
   
 return(
