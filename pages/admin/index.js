@@ -1,6 +1,7 @@
 import Admin from "layouts/Admin.js";
 import Table from "components/TableAdmin/Table.js";
 import Icon from "@mui/material/Icon";
+import { Avatar } from "@mui/material";
 import { useMaterialUIController} from "context";
 import { getAllUsers } from "../../lib/db-admin";
 
@@ -38,32 +39,14 @@ function Administrador({ users }) {
           Cell: ({ cell }) => {
             const imageUrl = cell.getValue();
             return imageUrl !== null ? (
-              <img 
-                src={imageUrl} 
-                alt="Imagen" 
-                style={{ 
-                  width: "50px", 
-                  height: "50px", 
-                  borderRadius: "50%", 
-                  objectFit: "cover" 
-                }} 
-              />
+              <Avatar alt="Avatar" src={imageUrl}  sx={{ width: 40, height: 40 }}/>
             ) : (
+              <Avatar alt="Avatar"  sx={{ width: 40, height: 40 }} >
               <Icon 
-                style={{ 
-                  width: "50px", 
-                  height: "50px", 
-                  borderRadius: "50%", 
-                  backgroundColor: darkMode ? "#e0e0e0" : "#1a2035!important" , 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center", 
-                  fontSize: "24px", 
-                  color: darkMode ? "#000000" : "#FFFFFF!important" 
-                }}
               >
                 account_circle
               </Icon>
+              </Avatar>
             );
           },
           enableSorting: false, 

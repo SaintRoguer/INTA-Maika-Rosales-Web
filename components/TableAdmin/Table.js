@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   MaterialReactTable,
@@ -16,7 +16,10 @@ import { useMaterialUIController} from "context";
 
 import { darken, lighten, useTheme } from '@mui/material';
 
+import BasicModal from "../ModalAdmin/Modal";
+
 import MDButton from "components/MDButton";
+
 
 
 
@@ -44,9 +47,86 @@ export default function CustomTable(props) {
    // light or dark font color
    const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
 
-  const goToSessionDetail = (rowData) => {
-    window.location.replace(`/sesion/${rowData}`);
+   
+
+   const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'common',
+  });
+  
+  const validateField = (field, value) => {
+    switch (field) {
+      case 'name':
+        return value.trim() ? '' : 'El nombre es requerido';
+      case 'email':
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Email inválido';
+      case 'password':
+        return value.length >= 6
+          ? ''
+          : 'La contraseña debe tener al menos 6 caracteres';
+      case 'role':
+        return value in ['admin', 'common'] ? '' : 'El rol es requerido';
+      default:
+        return '';
+    }
   };
+  
+  const handleInputChange = (field, value) => {
+    const error = validateField(field, value);
+    setValidationErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
+    setUserData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModalOpen = () => setIsModalOpen(true);
+  const handleModalClose = () => {setIsModalOpen(false); setUserData({ name: '', email: '', password: '', role: 'common' })}; 
+
+  const validateUserData = () => {
+    const errors = {};
+    if (!userData.name.trim()) errors.name = 'El nombre es requerido';
+    if (!userData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email))
+      errors.email = 'Email inválido';
+    if (!userData.password.trim() || userData.password.length < 6)
+      errors.password = 'La contraseña debe tener al menos 6 caracteres : ' + userData.password;
+    if (!userData.role) errors.role = 'El rol es requerido';
+    return errors;
+  };
+
+  const handleCreateUser = async () => {
+    handleInputChange('name', userData.name);
+    handleInputChange('email', userData.email);
+    handleInputChange('password', userData.password);
+    console.log('Creating user:', userData);
+  
+    const errors = validateUserData();
+    if (Object.keys(errors).length > 0) {
+      console.error('Validation Errors:', errors);
+      return; // Stop submission if there are validation errors
+    }
+  
+    try {
+      const response = await fetch('/api/admin/createUser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+  
+      if (response.ok) {
+        console.log("User created successfully");
+        setUserData({ name: '', email: '', password: '', role: 'common' });
+        handleModalClose();
+      } else {
+        console.error("Failed to create user");
+      }
+    } catch (error) {
+      console.error("Error while creating user:", error);
+    }
+  };
+  
+
    //UPDATE action
    const handleSaveRow = async ({ row, table,values }) => {
     const newValidationErrors = validateValue(values);
@@ -218,7 +298,7 @@ export default function CustomTable(props) {
       <MDButton 
         variant="gradient" 
         color="dark"
-        onClick={() => alert("Button clicked!")}
+        onClick={() => handleModalOpen()}
       >
         <Icon sx={{ fontWeight: "bold" }}>person_add</Icon>
         &nbsp;Añadir nuevo usuario
@@ -229,6 +309,14 @@ export default function CustomTable(props) {
 return(
 <div style={{ overflowX: 'auto' }}>
   <MaterialReactTable table={table}/>
+  <BasicModal
+    open={isModalOpen}
+    onClose={handleModalClose}
+    onInputChange={handleInputChange}
+    createUser={handleCreateUser}
+    validationErrors={validationErrors}
+/>
+
 </div>
 )}
 
