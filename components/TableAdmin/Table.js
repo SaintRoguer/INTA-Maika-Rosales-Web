@@ -104,7 +104,6 @@ export default function CustomTable(props) {
     handleInputChange('name', userData.name);
     handleInputChange('email', userData.email);
     handleInputChange('password', userData.password);
-    console.log('Creating user:', userData);
   
     const errors = validateUserData();
     if (Object.keys(errors).length > 0) {
@@ -120,18 +119,17 @@ export default function CustomTable(props) {
       });
   
       if (response.ok) {
-        console.log("User created successfully");
         addUserToTable(userData);
         setUserData({ name: '', email: '', password: '', role: 'common' });
         handleModalClose();
       } else {
         const errorData = await response.json();
-        console.error("Failed to create user");
         setError(errorData.error);
         handleModalErrorOpen();
       }
     } catch (error) {
-      console.error("Error while creating user:", error);
+      setError(errorData.error);
+      handleModalErrorOpen();
     }
   };
   
