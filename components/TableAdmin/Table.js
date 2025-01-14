@@ -95,6 +95,11 @@ export default function CustomTable(props) {
     return errors;
   };
 
+  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
+  const [error, setError] = useState('');
+  const handleModalErrorOpen = () => setIsModalErrorOpen(true);
+  const handleModalErrorClose = () => setIsModalErrorOpen(false);
+
   const handleCreateUser = async () => {
     handleInputChange('name', userData.name);
     handleInputChange('email', userData.email);
@@ -116,17 +121,23 @@ export default function CustomTable(props) {
   
       if (response.ok) {
         console.log("User created successfully");
+        addUserToTable(userData);
         setUserData({ name: '', email: '', password: '', role: 'common' });
         handleModalClose();
       } else {
+        const errorData = await response.json();
         console.error("Failed to create user");
+        setError(errorData.error);
+        handleModalErrorOpen();
       }
     } catch (error) {
       console.error("Error while creating user:", error);
     }
   };
   
-
+  const addUserToTable = (newUser) => {
+    setData((prevData) => [...prevData, newUser]);
+  };
    //UPDATE action
    const handleSaveRow = async ({ row, table,values }) => {
     const newValidationErrors = validateValue(values);
@@ -152,6 +163,8 @@ export default function CustomTable(props) {
     }),
     table.setEditingRow(null); //exit editing mode
   };
+
+  
 
   const table = useMaterialReactTable({
     columns,
@@ -315,6 +328,9 @@ return(
     onInputChange={handleInputChange}
     createUser={handleCreateUser}
     validationErrors={validationErrors}
+    openError={isModalErrorOpen}
+    onCloseError={handleModalErrorClose}
+    error={error}
 />
 
 </div>

@@ -1,13 +1,11 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import { Modal } from '@mui/material';
-import Inputs from './Inputs';
 import MDButton from 'components/MDButton';
 import { useMaterialUIController} from "context";
 import MDTypography from 'components/MDTypography';
-import ModalError from './ModalError';
 
-export default function BasicModal({ open, onClose, onInputChange, createUser, validationErrors, openError, onCloseError, error }) {
+export default function ModalError({ open, onClose, error }) {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
   return (
@@ -28,17 +26,14 @@ export default function BasicModal({ open, onClose, onInputChange, createUser, v
             boxShadow: 24,
             p: 4,
         }}>
-        <Inputs onInputChange={onInputChange}  errors={validationErrors}/>
-        <MDButton onClick={createUser} color="secondary" variant="outlined" sx={{mt: 2}}>
+        <MDTypography variant="button" color="error">
+            {error}
+        </MDTypography>
+        <MDButton onClick={onClose} color="secondary" variant="outlined" sx={{mt: 2}}>
             <MDTypography variant="button">
-                Crear usuario
+                Cerrar
             </MDTypography>
         </MDButton>
-        <ModalError 
-            open={openError} 
-            onClose={onCloseError} 
-            error={error}
-        />
       </Box>
     </Modal>
   );
