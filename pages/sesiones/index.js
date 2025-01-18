@@ -12,13 +12,12 @@ import generatePdf from "../../lib/pdfGeneratorAllSessions";
 
 import MDBox from "components/MDBox";
 
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import TableContainer from "@mui/material/TableContainer";
-import { getAllSessions } from "../../lib/db-admin";
 
-export async function getServerSideProps() {
+/*export async function getServerSideProps() {
   try {
     const sessions = await getAllSessions();
     return {
@@ -34,31 +33,27 @@ export async function getServerSideProps() {
       },
     };
   }
-}
+}*/
 
-function Sesiones({ sessions }) {
-  let csvData;
-  let tableData = getTableData(sessions);
+function Sesiones({}) {
+  const { data, error, isLoading } = useSWR("/api/sessions", {
+    refreshInterval: 20000, //Refresca cada 20 seg
+  });
 
   React.useEffect(() => {
-    console.log(sessions);
-  }, [sessions]);
+    if (data) {
+      console.log(data.sessions);
+    }
+  }, [data]);
 
-  /*const { data: allInfo, error: allInfoError } = useSWR(`/api/all`, {
-    refreshInterval: 1000,
-  });
-
-  if (allInfo) {
-    csvData = { ...formatCsvDataAllSessions(allInfo) };
-
-  const { data, error } = useSWR(`/api/sessions`, {
-    refreshInterval: 1000,
-  });
-
-  if (error) return <h3>Error al cargar...</h3>;
-  if (!data) {
-    return <h3><CircularProgress /></h3>; //todo: Poner spinner?
-  }*/
+  if (error) return <div>Error al cargar los datos.</div>;
+  if (isLoading)
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <CircularProgress />
+      </Box>
+    );
+  const tableData = getTableData(data.sessions);
 
   return (
     <Table

@@ -1,8 +1,20 @@
-import admin from "../../../configuration/firebaseAdmin";
+import { getAllSessions } from "../../../lib/db-admin";
 
-const firebase = admin.firestore();
+export default async function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
-export default async (req, res) => {
+  try {
+    const sessions = await getAllSessions();
+    return res.status(200).json({ sessions });
+  } catch (error) {
+    console.error("Error fetching sessions:", error);
+    return res.status(500).json({ error: "Error fetching sessions" });
+  }
+}
+
+/*export default async (req, res) => {
   let data = [];
 
   const sessions = await firebase
@@ -25,4 +37,4 @@ export default async (req, res) => {
   }
 
   return res.json(data);
-};
+};*/
