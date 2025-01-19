@@ -20,4 +20,16 @@ try {
   }
 }
 
+export const verifyIdToken = async (token) => {
+  if (!token) {
+    throw new Error("No token provided");
+  }
+
+  try {
+    return await admin.auth().verifyIdToken(token);
+  } catch (error) {
+    throw new Error("Invalid token");
+  }
+};
+
 export default admin;

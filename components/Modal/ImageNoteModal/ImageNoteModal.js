@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import ImageNotesTable from "components/Modal/ImageNoteModal/ImageNotesTable";
-import { useMaterialUIController} from "context";
+import { useMaterialUIController } from "context";
 import MDTypography from "components/MDTypography";
 
 const styles = {
@@ -15,7 +15,6 @@ export default function ImageNoteModal(props) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
-
   const onCloseModal = () => {
     setOpen(false);
     props.onCloseModal();
@@ -23,19 +22,19 @@ export default function ImageNoteModal(props) {
 
   const handleUpdateNotes = (data) => {
     onUpdate(data);
-
   };
 
   const showNotes = () => {
     if (props.notes && props.notes.length > 0) {
       return (
         <ImageNotesTable
-          tableHead={[{ 
-            accessorKey: "noteToDisplay",
-            header: "Nota", 
-            size: "auto" 
-          }
-        ]}
+          tableHead={[
+            {
+              accessorKey: "noteToDisplay",
+              header: "Nota",
+              size: "auto",
+            },
+          ]}
           tableData={props.notes}
           loteDetailId={props.loteDetailId}
           imageNumberInArray={props.imageNumberInArray}
@@ -43,24 +42,39 @@ export default function ImageNoteModal(props) {
         />
       );
     } else {
-      return <MDTypography color= {darkMode? "white" : "black" } sx={{fontSize:"22.5px"}}>
-                  La imágen no tiene ninguna nota. 
-                </MDTypography>
+      return (
+        <MDTypography
+          color={darkMode ? "white" : "black"}
+          sx={{ fontSize: "22.5px" }}
+        >
+          La imágen no tiene ninguna nota.
+        </MDTypography>
+      );
     }
   };
 
   return (
     <div>
       <SweetAlert
-        title={<MDTypography color= {darkMode? "white" : "black" } style={{fontSize:"37.5px"}}>{props.title}</MDTypography>}
+        title={
+          <MDTypography
+            color={darkMode ? "white" : "black"}
+            style={{ fontSize: "37.5px" }}
+          >
+            {props.title}
+          </MDTypography>
+        }
         onConfirm={() => {}}
         onCancel={() => onCloseModal()}
         custom
         showConfirm={false}
         showCancel={false}
         showCloseButton
-        style={{backgroundColor: darkMode ? "rgba(32,41,64, 1)" : "rgba(255, 255, 255, 1)"}}
-
+        style={{
+          backgroundColor: darkMode
+            ? "rgba(32,41,64, 1)"
+            : "rgba(255, 255, 255, 1)",
+        }}
       >
         {showNotes()}
       </SweetAlert>

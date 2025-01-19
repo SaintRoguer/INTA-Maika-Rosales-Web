@@ -36,7 +36,7 @@ import TableContainer from "@mui/material/TableContainer";
 }*/
 
 function Sesiones({}) {
-  const { data, error, isLoading } = useSWR("/api/sessions", {
+  const { data, error, isLoading } = useSWR("/api/sessions/getAllSessions", {
     refreshInterval: 20000, //Refresca cada 20 seg
   });
 

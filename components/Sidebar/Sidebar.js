@@ -4,7 +4,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Drawer from "@mui/material/Drawer";
 import Hidden from "@mui/material/Hidden";
 import List from "@mui/material/List";
@@ -77,11 +77,11 @@ export default function Sidebar(props) {
         target="_blank"
       >
         <div className={classes.logoImage}>
-          <img src={logo['src']} alt="logo" className={classes.img} />
+          <img src={logo["src"]} alt="logo" className={classes.img} />
         </div>
         {logoText}
       </a>
-      <div style={{ display: "flex", marginTop: 20 }}>
+      <span style={{ display: "flex", marginTop: 20 }}>
         <Image
           src="/inta-logo.png"
           alt="logo inta"
@@ -103,7 +103,7 @@ export default function Sidebar(props) {
             flex: "auto",
           }}
           onClick={() => window.open("https://cs.uns.edu.ar/home/", "_blank")}
-          sx={{ cursor: 'pointer' }}
+          sx={{ cursor: "pointer" }}
         />
         <Image
           src="/uns-logo.png"
@@ -115,7 +115,7 @@ export default function Sidebar(props) {
           }}
           onClick={() => window.open("https://www.uns.edu.ar/", "_blank")}
         />
-      </div>
+      </span>
     </div>
   );
   return (
@@ -141,7 +141,7 @@ export default function Sidebar(props) {
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image['src'] + ")" }}
+              style={{ backgroundImage: "url(" + image["src"] + ")" }}
             />
           ) : null}
         </Drawer>
@@ -160,7 +160,7 @@ export default function Sidebar(props) {
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image['src'] + ")" }}
+              style={{ backgroundImage: "url(" + image["src"] + ")" }}
             />
           ) : null}
         </Drawer>

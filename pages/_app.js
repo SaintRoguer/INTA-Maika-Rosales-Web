@@ -28,9 +28,7 @@ import { ThemeProvider } from "@mui/material/styles";
 const MyApp = ({ Component, pageProps }) => {
   const Layout = Component.layout || (({ children }) => <>{children}</>);
   const [controller, dispatch] = useMaterialUIController();
-    const {
-        darkMode,
-    } = controller;
+  const { darkMode } = controller;
 
   return (
     <React.Fragment>
@@ -40,6 +38,8 @@ const MyApp = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <title>Cobertura y gestión de suelos</title>
+        <link rel="shortcut icon" href="/favicon.png" />
+        {/*href={require("assets/img/favicon.png")}*/}
       </Head>
 
       <SWRConfig
@@ -51,10 +51,10 @@ const MyApp = ({ Component, pageProps }) => {
         }}
       >
         <Layout>
-            <ThemeProvider theme={darkMode ? themeDark : theme}>
-              <CssBaseline />
-                <Component {...pageProps} />
-            </ThemeProvider>
+          <ThemeProvider theme={darkMode ? themeDark : theme}>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
         </Layout>
       </SWRConfig>
     </React.Fragment>
@@ -62,9 +62,9 @@ const MyApp = ({ Component, pageProps }) => {
 };
 
 MyApp.getInitialProps = async (appContext) => {
-  const appProps = await App.getInitialProps(appContext)
-  return { ...appProps}
-}
+  const appProps = await App.getInitialProps(appContext);
+  return { ...appProps };
+};
 
 function AppWrapper(props) {
   return (

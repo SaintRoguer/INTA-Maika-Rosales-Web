@@ -10,7 +10,7 @@ const dataGeneralInfo = (darkMode) => ({
       ),
       content: (
         <>
-          <div
+          <span
             className={{
               display: "flex",
               justifyContent: "center",
@@ -26,7 +26,7 @@ const dataGeneralInfo = (darkMode) => ({
                 width: "60%",
               }}
             />
-          </div>
+          </span>
 
           <p>
             CGS es la sigla para{" "}
@@ -54,28 +54,39 @@ const dataGeneralInfo = (darkMode) => ({
       content: (
         <p>
           CGS nace de la colaboración entre el{" "}
-          <a 
-            href="https://www.argentina.gob.ar/inta" 
-            target="_blank" 
-            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline !important",  fontWeight: "bold" }}
+          <a
+            href="https://www.argentina.gob.ar/inta"
+            target="_blank"
+            style={{
+              color: darkMode ? "#ffffff" : "#1f283e",
+              textDecoration: "underline !important",
+              fontWeight: "bold",
+            }}
           >
             INTA
           </a>{" "}
           y el{" "}
-          <a 
-            href="https://cs.uns.edu.ar/home/" 
-            target="_blank" 
-            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline !important",  fontWeight: "bold" 
+          <a
+            href="https://cs.uns.edu.ar/home/"
+            target="_blank"
+            style={{
+              color: darkMode ? "#ffffff" : "#1f283e",
+              textDecoration: "underline !important",
+              fontWeight: "bold",
             }}
           >
             Departamento de Ciencias e Ingeniería de la Computación
           </a>{" "}
           de la Universidad Nacional del Sur, Bahía Blanca. La idea original del
           proyecto es de{" "}
-          <a 
-            href="http://cs.uns.edu.ar/~mll/web/" 
-            target="_blank" 
-            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline", fontWeight: "bold"  }}
+          <a
+            href="http://cs.uns.edu.ar/~mll/web/"
+            target="_blank"
+            style={{
+              color: darkMode ? "#ffffff" : "#1f283e",
+              textDecoration: "underline",
+              fontWeight: "bold",
+            }}
           >
             Martin Larrea
           </a>
@@ -84,7 +95,11 @@ const dataGeneralInfo = (darkMode) => ({
           <a
             href="https://www.researchgate.net/profile/Geronimo_De_Leo"
             target="_blank"
-            style={{ color: darkMode ? "#ffffff" : "#1f283e", textDecoration: "underline", fontWeight: "bold" }}
+            style={{
+              color: darkMode ? "#ffffff" : "#1f283e",
+              textDecoration: "underline",
+              fontWeight: "bold",
+            }}
           >
             Gerónimo De Leo
           </a>
@@ -117,8 +132,6 @@ const dataGeneralInfo = (darkMode) => ({
   ],
 });
 
-
-
 const getStyleGeneralInfo = (darkMode) => ({
   bgColor: darkMode ? "#1f283e" : "#EEEEE",
   rowTitleColor: darkMode ? "#ffffff" : "#1f283e",
@@ -131,4 +144,3 @@ const getStyleGeneralInfo = (darkMode) => ({
 });
 
 export { dataGeneralInfo, getStyleGeneralInfo };
-
