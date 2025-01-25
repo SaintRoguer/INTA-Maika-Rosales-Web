@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { verifyIdToken } from "../ProyectoFinalMassettiJouglard-Web/configuration/firebaseAdmin";
+//import { verifyIdToken } from "../ProyectoFinalMassettiJouglard-Web/configuration/firebaseAdmin";
 
 // Rutas que requieren autenticación
 const protectedRoutes = ["/", "/sesiones", "/admin", "/ayuda"];

@@ -4,12 +4,9 @@
 //const withCSS = require("@zeit/next-css");
 const webpack = require("webpack");
 const path = require("path");
-const nodeLibs = require("node-libs-browser");
+//const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = async (phase, { defaultConfig }) => {
-  /**
-   * @type {import('next').NextConfig}
-   */
   const nextConfig = {
     // Configuración para imágenes
     images: {
@@ -22,13 +19,31 @@ module.exports = async (phase, { defaultConfig }) => {
 
     // Habilitar minificación con SWC
     swcMinify: true,
-
+    
     // Personalización de Webpack
     webpack(config, options) {
+
+      //config.plugins.push(new NodePolyfillPlugin());
+
       config.experiments = {
         ...config.experiments, // Mantener otras configuraciones de experimentos
         asyncWebAssembly: true,
       };
+      // Agregar polyfills para módulos de Node.js
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      events: require.resolve("events/"), // Polyfill para node:events
+      util: require.resolve("util/"), // Polyfill para node:util
+      stream: require.resolve("stream-browserify"), // Polyfill para node:stream
+    };
+
+    // Agregar plugins necesarios para Webpack
+    config.plugins.push(
+      new webpack.ProvidePlugin({
+        process: "process/browser", // Polyfill para process
+        Buffer: ["buffer", "Buffer"], // Polyfill para Buffer
+      })
+    );
 
       config.resolve.modules.push(path.resolve("./"));
       return config;

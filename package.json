@@ -23,6 +23,7 @@
     "chroma-js": "^2.4.2",
     "classnames": "2.2.6",
     "date-fns": "^3.6.0",
+    "events": "^3.3.0",
     "firebase": "^10.12.4",
     "firebase-admin": "^12.2.0",
     "history": "5.0.0",
@@ -33,7 +34,7 @@
     "next": "^12.3.4",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.8.5",
-    "node-libs-browser": "^2.2.1",
+    "node-polyfill-webpack-plugin": "^4.1.0",
     "path": "0.12.7",
     "perfect-scrollbar": "1.5.0",
     "prop-types": "15.7.2",
@@ -49,7 +50,9 @@
     "react-responsive-modal": "^6.4.2",
     "react-swipeable-views": "^0.14.0",
     "sass": "^1.77.6",
+    "stream-browserify": "^3.0.0",
     "swr": "^2.2.5",
+    "util": "^0.12.5",
     "webpack": "^5.97.1"
   },
   "eslintConfig": {
@@ -70,7 +73,6 @@
   "optionalDependencies": {
     "@types/googlemaps": "3.39.13",
     "@types/markerclustererplus": "2.1.33",
-    "node-sass": "4.14.1",
     "typescript": "3.9.7"
   }
 }
