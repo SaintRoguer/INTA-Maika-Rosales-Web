@@ -9,7 +9,9 @@ import BasicLayout from "layouts/BasicLayout";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 // Import the userLogin function
-import { userLogin } from "lib/db-client"; // Update with the actual path
+import { userLogin } from "../../lib/db-client"; // Update with the actual path
+import { NextResponse } from "next/server";
+import { useRouter } from "next/router";
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -35,7 +37,7 @@ function SignIn() {
   };
 
   return (
-    <BasicLayout image={bgImage['src']}>
+    <BasicLayout image={bgImage["src"]}>
       <Card>
         <MDBox
           variant="gradient"
@@ -48,7 +50,13 @@ function SignIn() {
           mb={1}
           textAlign="center"
         >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1} mb={2}>
+          <MDTypography
+            variant="h4"
+            fontWeight="medium"
+            color="white"
+            mt={1}
+            mb={2}
+          >
             Iniciar sesión
           </MDTypography>
         </MDBox>
