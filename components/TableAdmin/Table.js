@@ -213,6 +213,31 @@ export default function CustomTable(props) {
     };
   };
 
+  const handleChangePassword = async (row) => {
+    const newPassword = prompt('Introduce la nueva contraseña');
+    if (newPassword) {
+      try {
+        const response = await fetch('/api/admin/updateUser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({uid:row.original.uid, password:newPassword}),
+        });
+
+        if (response.ok) {
+          window.alert('Contraseña cambiada correctamente');
+        } else {
+          const errorData = await response.json();
+          setError(errorData.error);
+          handleModalErrorOpen();
+        }
+      }
+      catch (error) {
+        setError(errorData.error);
+        handleModalErrorOpen();
+      }
+    }
+  };
+
   
 
   const table = useMaterialReactTable({
@@ -254,6 +279,11 @@ export default function CustomTable(props) {
         <Tooltip title="Eliminar">
           <IconButton onClick={() => handleDeleteUser(row)}>
             <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">delete</Icon>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Cambiar contraseña">
+          <IconButton onClick={() => handleChangePassword(row)}>
+            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">key</Icon>
           </IconButton>
         </Tooltip>
       </Box>
