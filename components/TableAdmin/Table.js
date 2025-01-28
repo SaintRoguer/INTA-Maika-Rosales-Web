@@ -145,8 +145,6 @@ export default function CustomTable(props) {
   };
 
    const handleSaveRow = async ({ row, table,values }) => {
-    console.log('values', values);
-    console.log('row', row.original);
 
     const errors = validateUserDataUpdate(values);
     if (Object.keys(errors).length > 0) {
@@ -191,6 +189,30 @@ export default function CustomTable(props) {
     table.setEditingRow(null); //exit editing mode
   };
 
+  const handleDeleteUser = async (row) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+      try {
+        const response = await fetch('/api/admin/deleteUser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({uid:row.original.uid}),
+        });
+    
+        if (response.ok) {
+          window.alert('Usuario eliminado correctamente');
+          setData((prevData) => prevData.filter((user) => user.uid !== row.original.uid));
+        } else {
+          const errorData = await response.json();
+          setError(errorData.error);
+          handleModalErrorOpen();
+        }
+      } catch (error) {
+        setError(errorData.error);
+        handleModalErrorOpen();
+      }
+    };
+  };
+
   
 
   const table = useMaterialReactTable({
@@ -230,8 +252,8 @@ export default function CustomTable(props) {
           </IconButton>
         </Tooltip>
         <Tooltip title="Eliminar">
-          <IconButton onClick={() => table.delete(row)}>
-            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">person_remove</Icon>
+          <IconButton onClick={() => handleDeleteUser(row)}>
+            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">delete</Icon>
           </IconButton>
         </Tooltip>
       </Box>
