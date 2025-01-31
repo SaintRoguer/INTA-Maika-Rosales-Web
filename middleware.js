@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 const cookie = require("cookie");
 const roleRoutes = {
-  admin: ["/admin"],
+  admin: ["/admin", "/sesiones", "/ayuda"],
   common: ["/sesiones", "/ayuda"], // "common" puede acceder a "/sesiones" y sus subrutas
 };
 
