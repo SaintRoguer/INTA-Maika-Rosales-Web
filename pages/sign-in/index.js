@@ -7,6 +7,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import BasicLayout from "layouts/BasicLayout";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import useSWR from "swr";
 
 // Import the userLogin function
 import { userLogin } from "../../lib/db-client"; // Update with the actual path
@@ -18,6 +19,8 @@ function SignIn() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const cookie = require("cookie");
+  const router = useRouter();
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
@@ -26,11 +29,20 @@ function SignIn() {
     setErrorMessage(""); // Reset error message
 
     try {
-      // Call the userLogin function with email and password
-      await userLogin(email, password);
-      console.log("Login successful");
+      const { token, uid } = await userLogin(email, password);
 
-      // Handle successful login: redirect, store token, etc.
+      const response = await fetch("/api/sign-in/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token, uid }),
+      });
+
+      if (!response.ok) {
+        throw new Error(data.message || "Error al iniciar sesión");
+      }
+      router.push("/sign-in");
     } catch (error) {
       setErrorMessage(error.message);
     }

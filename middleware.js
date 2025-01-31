@@ -1,42 +1,38 @@
-import { NextResponse, NextRequest } from "next/server";
-import { parse } from "cookie";
-//import { verifyIdToken } from "../ProyectoFinalMassettiJouglard-Web/configuration/firebaseAdmin";
+import { NextResponse } from "next/server";
 
 // Rutas que requieren autenticación
 const protectedRoutes = ["/", "/sesiones", "/admin", "/ayuda"];
 const cookie = require("cookie");
 
 export async function middleware(req) {
-  console.log("ENTRO AL MIDDLEWARE");
-
   const { pathname } = req.nextUrl;
-
-  // Solo aplica el middleware en las rutas protegidas
-  if (!protectedRoutes.some((route) => pathname.startsWith(route))) {
-    return NextResponse.next();
-  }
   const cookies = cookie.parse(req.headers.get("cookie") || "");
-  const token = cookies.token; // Obtén el token desde las cookies
+  const token = cookies.token;
+  const role = cookies.role;
 
-  if (!token) {
-    console.log("No hay token: " + token);
-    // Redirige al login si no hay token
-    return NextResponse.redirect(new URL("/sign-in", req.url));
-  } else {
-    try {
-      console.log("Hay token: " + token);
-      // Verifica el token con Firebase Admin
-      //const decodedToken = await verifyIdToken(token);
-
-      return NextResponse.next();
-    } catch (error) {
-      console.error("Error verificando el token:", error);
-      // Redirige al login en caso de error
+  // 🔒 Si NO hay token ni rol, redirige a /sign-in
+  if (!token || !role) {
+    if (pathname !== "/sign-in") {
+      console.log("No autenticado, redirigiendo a /sign-in");
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }
+    return NextResponse.next(); // Permite acceder a /sign-in
   }
+  // ✅ Si el usuario tiene token y está en /sign-in, redirigirlo a la página correcta según su rol
+  if (token && role && pathname === "/sign-in") {
+    console.log("Usuario autenticado, redirigiendo según el rol...");
+    if (role === "admin") {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    } else {
+      return NextResponse.redirect(new URL("/sesiones", req.url));
+    }
+  }
+
+  // ✅ Si el usuario tiene token, permitir navegación libre
+  console.log("Usuario autenticado, permitiendo acceso normal.");
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/admin", "/sesiones/:path*", "/ayuda"], // Rutas protegidas
+  matcher: ["/admin", "/sesiones/:path*", "/ayuda", "/sign-in"], // Rutas protegidas
 };

@@ -40,12 +40,6 @@ function Sesiones({}) {
     refreshInterval: 20000, //Refresca cada 20 seg
   });
 
-  React.useEffect(() => {
-    if (data) {
-      console.log(data.sessions);
-    }
-  }, [data]);
-
   if (error) return <div>Error al cargar los datos.</div>;
   if (isLoading)
     return (
