@@ -57,9 +57,13 @@ function Administrador({ users }) {
           header: "Usuario", 
         },
         { 
+          accessorKey: "email", 
+          header: "Email", 
+        },
+        { 
           accessorKey: "role", 
           header: "Rol", 
-        },
+        },       
       ]}
       tableData={users}
     />

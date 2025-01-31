@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   MaterialReactTable,
@@ -8,8 +8,6 @@ import { Box, IconButton, Tooltip } from '@mui/material';
 import Icon from "@mui/material/Icon";
 
 import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
-
-import { updateSession } from "../../lib/db-client";
 
 import { useMaterialUIController} from "context";
 
@@ -136,30 +134,108 @@ export default function CustomTable(props) {
   const addUserToTable = (newUser) => {
     setData((prevData) => [...prevData, newUser]);
   };
-   //UPDATE action
+
+  const validateUserDataUpdate = (values) => {
+    const errors = {};
+    if (!values.name.trim()) errors.name = 'El nombre es requerido';
+    if (!values.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
+      errors.email = 'Email inválido';
+    if (!values.role) errors.role = 'El rol es requerido';
+    return errors;
+  };
+
    const handleSaveRow = async ({ row, table,values }) => {
-    const newValidationErrors = validateValue(values);
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors);
-      return;//algun modal o tooltip, mejor tooltip
+
+    const errors = validateUserDataUpdate(values);
+    if (Object.keys(errors).length > 0) {
+      console.error('Validation Errors:', errors);
+      return; // Stop submission if there are validation errors
     }
 
     new Promise((resolve, reject) => {
       setTimeout(async () => {
         //Actualizo en firebase
-        if (row.original.description !== values.description) {
-          //Only session description is editable
-          await updateSession(
-            row.original.sessionId,
-            row.original.id,
-            values.description
-          );
+        if (row.original.name !== values.name
+          || row.original.email !== values.email
+          || row.original.role !== values.role
+          || row.original.photoUrl !== values.photoUrl
+        ) {
+          try {
+            const response = await fetch('/api/admin/updateUser', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                uid: row.original.uid,
+                name: values.name,
+                email: values.email,
+                role: values.role,
+                photoUrl: values.photoUrl,
+              }),
+            });
+            if (!response.ok) {
+              const errorData = await response.json();
+              setError(errorData.error);
+              handleModalErrorOpen();
+            }
+          } catch (error) {
+            setError(errorData.error);
+            handleModalErrorOpen();
+          }
         }
         //La tabla se actualiza sola gracias a SWR
         resolve();
       }, 1000);
     }),
     table.setEditingRow(null); //exit editing mode
+  };
+
+  const handleDeleteUser = async (row) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+      try {
+        const response = await fetch('/api/admin/deleteUser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({uid:row.original.uid}),
+        });
+    
+        if (response.ok) {
+          window.alert('Usuario eliminado correctamente');
+          setData((prevData) => prevData.filter((user) => user.uid !== row.original.uid));
+        } else {
+          const errorData = await response.json();
+          setError(errorData.error);
+          handleModalErrorOpen();
+        }
+      } catch (error) {
+        setError(errorData.error);
+        handleModalErrorOpen();
+      }
+    };
+  };
+
+  const handleChangePassword = async (row) => {
+    const newPassword = prompt('Introduce la nueva contraseña');
+    if (newPassword) {
+      try {
+        const response = await fetch('/api/admin/updateUser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({uid:row.original.uid, password:newPassword}),
+        });
+
+        if (response.ok) {
+          window.alert('Contraseña cambiada correctamente');
+        } else {
+          const errorData = await response.json();
+          setError(errorData.error);
+          handleModalErrorOpen();
+        }
+      }
+      catch (error) {
+        setError(errorData.error);
+        handleModalErrorOpen();
+      }
+    }
   };
 
   
@@ -196,13 +272,18 @@ export default function CustomTable(props) {
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Editar">
-          <IconButton onClick={() => table.setEditingRow(row)}>
+          <IconButton onClick={() => table.setEditingRow(row) }>
             <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">edit</Icon>
           </IconButton>
         </Tooltip>
         <Tooltip title="Eliminar">
-          <IconButton onClick={() => table.delete(row)}>
-            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">person_remove</Icon>
+          <IconButton onClick={() => handleDeleteUser(row)}>
+            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">delete</Icon>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Cambiar contraseña">
+          <IconButton onClick={() => handleChangePassword(row)}>
+            <Icon sx={{color: darkMode ? '#FFFFFF' : '#000000'}} fontSize="small">key</Icon>
           </IconButton>
         </Tooltip>
       </Box>
@@ -339,13 +420,3 @@ CustomTable.propTypes = {
   tableData: PropTypes.arrayOf(PropTypes.object),
 };
 
-
-const validateRequired = (value) => !!value.length;
-
-function validateValue(value) {
-  return {
-    description: !validateRequired(value.description)
-      ? 'La descripción es requerida'
-      : '',
-  };
-}
