@@ -5,7 +5,7 @@ import Sidenav from "components/Sidenav";
 import Footer from "components/Footer copy";
 import Configurator from "components/Configurator";
 import DashboardLayout from "layouts/DashboardLayout";
-import DashboardNavbar from "components/Navbars copy/DashboardNavbar";
+import DashboardNavbar from "components/Navbars/DashboardNavbar";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
 import logo from "assets/img/logo.png";
 import theme from "assets/theme";

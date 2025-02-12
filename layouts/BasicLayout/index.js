@@ -23,7 +23,7 @@ import Grid from "@mui/material/Grid";
 import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
-import DefaultNavbar from "components/Navbars copy/DefaultNavbar";
+import DefaultNavbar from "components/Navbars/DefaultNavbar";
 
 // Authentication pages components
 import Footer from "layouts/Footer";

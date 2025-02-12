@@ -43,7 +43,7 @@ import {
   navbarRow,
   navbarIconButton,
   navbarMobileMenu,
-} from "components/Navbars copy/DashboardNavbar/styles";
+} from "components/Navbars/DashboardNavbar/styles";
 
 // Material Dashboard 2 React context
 import {

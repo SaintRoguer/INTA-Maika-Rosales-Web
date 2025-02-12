@@ -31,8 +31,8 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
 // Material Dashboard 2 React example components
-import DefaultNavbarLink from "components/Navbars copy/DefaultNavbar/DefaultNavbarLink";
-import DefaultNavbarMobile from "components/Navbars copy/DefaultNavbar/DefaultNavbarMobile";
+import DefaultNavbarLink from "components/Navbars/DefaultNavbar/DefaultNavbarLink";
+import DefaultNavbarMobile from "components/Navbars/DefaultNavbar/DefaultNavbarMobile";
 
 // Material Dashboard 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
