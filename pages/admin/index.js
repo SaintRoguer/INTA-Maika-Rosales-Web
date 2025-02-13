@@ -2,7 +2,6 @@ import Admin from "layouts/Admin.js";
 import Table from "components/TableAdmin/Table.js";
 import Icon from "@mui/material/Icon";
 import { Avatar } from "@mui/material";
-import { useMaterialUIController} from "context";
 import { getAllUsers } from "../../lib/db-admin";
 
 export async function getServerSideProps() {
@@ -25,8 +24,6 @@ export async function getServerSideProps() {
 
 
 function Administrador({ users }) {
-  const [controller] = useMaterialUIController();
-  const { darkMode } = controller;
   return (
 
     <Table 

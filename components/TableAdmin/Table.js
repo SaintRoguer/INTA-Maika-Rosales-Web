@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   MaterialReactTable,
@@ -10,20 +10,15 @@ import Icon from "@mui/material/Icon";
 import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
 
 import { useMaterialUIController } from "context";
+import { useModal } from "context/ModalContext"; 
 
 import { darken, lighten, useTheme } from '@mui/material';
 
-import BasicModal from "../ModalAdmin/Modal";
 import MDButton from "components/MDButton";
-import ModalChangePassword from "../ModalAdmin/ModalChangePassword";
-import ModalDeleteUser from "../ModalAdmin/ModalDeleteUser"; // Import the new modal
+import ModalManager from "components/ModalManager/ModalManager";
 
 export default function CustomTable(props) {
-  const [rowToUpdate, setRowToUpdate] = useState(null); // Store the row data for password change
-  const [isModalOpenChangePassword, setIsModalOpenChangePassword] = useState(false); // Modal state for password change
-
-  const [rowToDelete, setRowToDelete] = useState(null); // Store the row data for deletion
-  const [isModalOpenDeleteUser, setIsModalOpenDeleteUser] = useState(false); // Modal state for deletion
+  const { openModal, closeModal } = useModal(); 
 
   const [validationErrors, setValidationErrors] = useState({});
   const { tableHead, tableData } = props;
@@ -44,6 +39,8 @@ export default function CustomTable(props) {
 
   const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
 
+  
+
   const [userData, setUserData] = useState({
     name: '',
     email: '',
@@ -51,109 +48,105 @@ export default function CustomTable(props) {
     role: 'common',
   });
 
-  const validateField = (field, value) => {
+  const handleInputChange = (field, value) => {
+    setUserData((prevData) => {
+      const updatedData = { ...prevData, [field]: value };
+      const errors = validateUserData(field, value, updatedData); 
+      setValidationErrors((prevErrors) => ({ ...prevErrors, ...errors }));
+      return updatedData; 
+    });
+  };
+
+  const validateUserData = (field, value, userData) => {
+    const errors = {};
     switch (field) {
       case 'name':
-        return value.trim() ? '' : 'El nombre es requerido';
+        errors.name = value.trim() ? '' : 'El nombre es requerido';
+        break;
       case 'email':
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Email inválido';
+        errors.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Email inválido';
+        break;
       case 'password':
-        return value.length >= 6
-          ? ''
-          : 'La contraseña debe tener al menos 6 caracteres';
+        errors.password = value.length >= 6 ? '' : 'La contraseña debe tener al menos 6 caracteres';
+        break;
       case 'role':
-        return value in ['admin', 'common'] ? '' : 'El rol es requerido';
+        errors.role = ['admin', 'common'].includes(value) ? '' : 'El rol es requerido';
+        break;
       default:
-        return '';
+        break;
     }
-  };
-
-  const handleInputChange = (field, value) => {
-    const error = validateField(field, value);
-    setValidationErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
-    setUserData((prevData) => ({ ...prevData, [field]: value }));
-  };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleModalOpen = () => setIsModalOpen(true);
-  const handleModalClose = () => { setIsModalOpen(false); setUserData({ name: '', email: '', password: '', role: 'common' }) };
-
-  const validateUserData = () => {
-    const errors = {};
-    if (!userData.name.trim()) errors.name = 'El nombre es requerido';
-    if (!userData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email))
-      errors.email = 'Email inválido';
-    if (!userData.password.trim() || userData.password.length < 6)
-      errors.password = 'La contraseña debe tener al menos 6 caracteres : ' + userData.password;
-    if (!userData.role) errors.role = 'El rol es requerido';
+  
+    if (!field) {
+      if (!userData.name.trim()) errors.name = 'El nombre es requerido';
+      if (!userData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email))
+        errors.email = 'Email inválido';
+      if (!userData.password.trim() || userData.password.length < 6)
+        errors.password = 'La contraseña debe tener al menos 6 caracteres';
+      if (!['admin', 'common'].includes(userData.role))
+        errors.role = 'El rol es requerido';
+    }
+  
     return errors;
   };
 
-  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
   const [error, setError] = useState('');
-  const handleModalErrorOpen = () => setIsModalErrorOpen(true);
-  const handleModalErrorClose = () => setIsModalErrorOpen(false);
 
   const handleCreateUser = async () => {
-    handleInputChange('name', userData.name);
-    handleInputChange('email', userData.email);
-    handleInputChange('password', userData.password);
-
-    const errors = validateUserData();
-    if (Object.keys(errors).length > 0) {
-      console.error('Validation Errors:', errors);
-      return; // Stop submission if there are validation errors
-    }
-
-    try {
-      const response = await fetch('/api/admin/createUser', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        addUserToTable(userData);
-        setUserData({ name: '', email: '', password: '', role: 'common' });
-        handleModalClose();
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error);
-        handleModalErrorOpen();
+    setUserData((prevData) => {
+      const errors = validateUserData(null, null, prevData); 
+      if (Object.keys(errors).some((key) => errors[key])) {
+        setValidationErrors(errors);
+        console.error('Validation Errors:', errors);
+        return prevData; 
       }
-    } catch (error) {
-      setError(errorData.error);
-      handleModalErrorOpen();
-    }
+  
+      (async () => {
+        try {
+          const response = await fetch('/api/admin/createUser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(prevData), 
+          });
+  
+          if (response.ok) {
+            addUserToTable(prevData); 
+            setUserData({ name: '', email: '', password: '', role: 'common' }); 
+            openModal(null); 
+          } else {
+            const errorData = await response.json();
+            setError(errorData.error);
+            openModal('error', { error: errorData.error });
+          }
+        } catch (error) {
+          setError(error.message);
+          openModal('error', { error: error.message });
+        }
+      })();
+  
+      return prevData; 
+    });
   };
 
   const addUserToTable = (newUser) => {
     setData((prevData) => [...prevData, newUser]);
   };
 
-  const validateUserDataUpdate = (values) => {
-    const errors = {};
-    if (!values.name.trim()) errors.name = 'El nombre es requerido';
-    if (!values.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
-      errors.email = 'Email inválido';
-    if (!values.role) errors.role = 'El rol es requerido';
-    return errors;
-  };
-
   const handleSaveRow = async ({ row, table, values }) => {
-    const errors = validateUserDataUpdate(values);
-    if (Object.keys(errors).length > 0) {
+    const errors = validateUserData(null, null, values);
+    if (Object.keys(errors).some((key) => errors[key])) {
+      setValidationErrors(errors);
       console.error('Validation Errors:', errors);
-      return; // Stop submission if there are validation errors
+      return;
     }
-
+  
     new Promise((resolve, reject) => {
       setTimeout(async () => {
-        // Actualizo en firebase
-        if (row.original.name !== values.name
-          || row.original.email !== values.email
-          || row.original.role !== values.role
-          || row.original.photoUrl !== values.photoUrl
+       
+        if (
+          row.original.name !== values.name ||
+          row.original.email !== values.email ||
+          row.original.role !== values.role ||
+          row.original.photoUrl !== values.photoUrl
         ) {
           try {
             const response = await fetch('/api/admin/updateUser', {
@@ -170,72 +163,87 @@ export default function CustomTable(props) {
             if (!response.ok) {
               const errorData = await response.json();
               setError(errorData.error);
-              handleModalErrorOpen();
+              openModal('error', { error: errorData.error });
             }
           } catch (error) {
-            setError(errorData.error);
-            handleModalErrorOpen();
+            setError(error.message);
+            openModal('error', { error: error.message });
           }
         }
-        // La tabla se actualiza sola gracias a SWR
         resolve();
       }, 1000);
-    }),
-      table.setEditingRow(null); //exit editing mode
+    });
+  
+    table.setEditingRow(null); 
   };
 
   const handleDeleteUser = (row) => {
-    setRowToDelete(row); // Store the row to delete
-    setIsModalOpenDeleteUser(true); // Open the delete confirmation modal
-  };
+    openModal('deleteUser', {
+      onConfirm: async () => {
+        try {
+          const response = await fetch('/api/admin/deleteUser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid: row.original.uid }),
+          });
 
-  const handleConfirmDelete = async () => {
-    if (!rowToDelete) return; // Ensure row data is available
-  
-    try {
-      const response = await fetch('/api/admin/deleteUser', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: rowToDelete.original.uid }),
-      });
-  
-      if (response.ok) {
-        window.alert('Usuario eliminado correctamente');
-        setData((prevData) => prevData.filter((user) => user.uid !== rowToDelete.original.uid));
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error); // Throw the error to be caught in the modal
-      }
-    } catch (error) {
-      throw error; // Re-throw the error to be caught in the modal
-    }
+          if (response.ok) {
+            window.alert('Usuario eliminado correctamente');
+            setData((prevData) => prevData.filter((user) => user.uid !== row.original.uid));
+          } else {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+          }
+        } catch (error) {
+          throw error; 
+        }
+      },
+    });
   };
 
   const handleChangePassword = (row) => {
-    setRowToUpdate(row); // Store the row data
-    setIsModalOpenChangePassword(true); // Open the modal
+    openModal('changePassword', {
+      onSubmit: async (newPassword) => {
+        try {
+          const response = await fetch('/api/admin/updateUser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid: row.original.uid, password: newPassword }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error al actualizar usuario');  
+          }
+
+          window.alert('Contraseña cambiada correctamente');
+        } catch (error) {
+          throw error; 
+        }
+      },
+    });
   };
 
-  const handleSubmitNewPassword = async (newPassword) => {
-    if (!rowToUpdate) return; // Ensure row data is available
-  
-    try {
-      const response = await fetch('/api/admin/updateUser', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: rowToUpdate.original.uid, password: newPassword }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al actualizar usuario'); // Throw the error
-      }
-  
-      window.alert('Contraseña cambiada correctamente');
-      setIsModalOpenChangePassword(false); // Close the modal
-    } catch (error) {
-      throw error; // Re-throw the error to be caught in the modal
-    }
+  const resetForm = () => {
+    setUserData({
+      name: '',
+      email: '',
+      password: '',
+      role: 'common',
+    });
+    setValidationErrors({});
+  };
+
+  const handleOpenCreateUserModal = () => {
+    openModal('createUser', {
+      onInputChange: handleInputChange,
+      createUser: handleCreateUser,
+      validationErrors,
+      onClose: () => {
+        resetForm();  
+        closeModal(); 
+      },
+    });
   };
 
   const table = useMaterialReactTable({
@@ -262,7 +270,7 @@ export default function CustomTable(props) {
         header: 'Acciones',
         size: 50,
         muiTableHeadCellProps: {
-          align: 'center', //change head cell props
+          align: 'center',
         },
       },
     },
@@ -383,7 +391,7 @@ export default function CustomTable(props) {
       <MDButton
         variant="gradient"
         color="dark"
-        onClick={() => handleModalOpen()}
+        onClick={handleOpenCreateUserModal}
       >
         <Icon sx={{ fontWeight: "bold" }}>person_add</Icon>
         &nbsp;Añadir nuevo usuario
@@ -394,26 +402,7 @@ export default function CustomTable(props) {
   return (
     <div style={{ overflowX: 'auto' }}>
       <MaterialReactTable table={table} />
-      <BasicModal
-        open={isModalOpen}
-        onClose={handleModalClose}
-        onInputChange={handleInputChange}
-        createUser={handleCreateUser}
-        validationErrors={validationErrors}
-        openError={isModalErrorOpen}
-        onCloseError={handleModalErrorClose}
-        error={error}
-      />
-      <ModalChangePassword
-        open={isModalOpenChangePassword}
-        onClose={() => setIsModalOpenChangePassword(false)}
-        onSubmit={handleSubmitNewPassword}
-      />
-      <ModalDeleteUser
-        open={isModalOpenDeleteUser}
-        onClose={() => setIsModalOpenDeleteUser(false)}
-        onConfirm={handleConfirmDelete}
-      />
+      <ModalManager /> {/* Render the ModalManager */}
     </div>
   );
 }

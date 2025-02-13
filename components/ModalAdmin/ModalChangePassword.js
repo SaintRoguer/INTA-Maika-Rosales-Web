@@ -4,46 +4,46 @@ import { Modal, TextField, InputAdornment } from '@mui/material';
 import MDButton from 'components/MDButton';
 import { useMaterialUIController } from 'context';
 import MDTypography from 'components/MDTypography';
-import ModalError from './ModalError'; // Import the ModalError component
+import ModalError from './ModalError'; 
 
 export default function ModalChangePassword({ open, onClose, onSubmit }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  const [newPassword, setNewPassword] = useState(''); // State to manage the new password input
-  const [error, setError] = useState(''); // State to manage validation errors
-  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false); // State to manage error modal visibility
+  const [newPassword, setNewPassword] = useState('');
+  const [error, setError] = useState(''); 
+  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false); 
 
   const handleSubmit = async () => {
     if (!newPassword) {
       setError('La contraseña no puede estar vacía');
-      setIsModalErrorOpen(true); // Open the error modal
+      setIsModalErrorOpen(true); 
       return;
     }
 
     try {
-      await onSubmit(newPassword); // Call the onSubmit function from props
-      onClose(); // Close the modal
+      await onSubmit(newPassword); 
+      onClose(); 
     } catch (error) {
-      setError(error.message); // Set the error message
-      setIsModalErrorOpen(true); // Open the error modal
+      setError(error.message); 
+      setIsModalErrorOpen(true); 
     }
   };
 
   const handleCloseError = () => {
-    setIsModalErrorOpen(false); // Close the error modal
-    setError(''); // Clear the error message
+    setIsModalErrorOpen(false); 
+    setError(''); 
   };
 
   const handleCloseModal = () => {
-    setNewPassword(''); // Clear the input field
-    onClose(); // Close the modal
+    setNewPassword(''); 
+    onClose(); 
   };
 
   return (
     <>
       <Modal
         open={open}
-        onClose={handleCloseModal} // Use handleCloseModal instead of onClose
+        onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

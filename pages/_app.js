@@ -21,7 +21,8 @@ import Head from "next/head";
 import { SWRConfig } from "swr";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import { MaterialUIControllerProvider, useMaterialUIController } from "context";
+import { MaterialUIControllerProvider, useMaterialUIController} from "context";
+import { ModalProvider } from 'context/ModalContext';
 import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
 import { ThemeProvider } from "@mui/material/styles";
@@ -52,8 +53,10 @@ const MyApp = ({ Component, pageProps }) => {
       >
         <Layout>
           <ThemeProvider theme={darkMode ? themeDark : theme}>
-            <CssBaseline />
-            <Component {...pageProps} />
+            <ModalProvider> 
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ModalProvider>
           </ThemeProvider>
         </Layout>
       </SWRConfig>

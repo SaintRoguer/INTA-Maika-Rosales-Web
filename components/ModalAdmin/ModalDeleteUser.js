@@ -3,27 +3,27 @@ import { Modal, Box, Typography, Button } from '@mui/material';
 import { useMaterialUIController } from 'context';
 import MDButton from 'components/MDButton';
 import MDTypography from 'components/MDTypography';
-import ModalError from './ModalError'; // Import the ModalError component
+import ModalError from './ModalError';
 
 export default function ModalDeleteUser({ open, onClose, onConfirm }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  const [error, setError] = useState(''); // State to manage validation errors
-  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false); // State to manage error modal visibility
+  const [error, setError] = useState('');
+  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false); 
 
   const handleConfirm = async () => {
     try {
-      await onConfirm(); // Call the onConfirm function from props
-      onClose(); // Close the modal
+      await onConfirm(); 
+      onClose(); 
     } catch (error) {
-      setError(error.message); // Set the error message
-      setIsModalErrorOpen(true); // Open the error modal
+      setError(error.message); 
+      setIsModalErrorOpen(true); 
     }
   };
 
   const handleCloseError = () => {
-    setIsModalErrorOpen(false); // Close the error modal
-    setError(''); // Clear the error message
+    setIsModalErrorOpen(false); 
+    setError(''); 
   };
 
   return (
