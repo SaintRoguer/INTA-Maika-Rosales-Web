@@ -44,7 +44,11 @@ function SignIn() {
       }
       router.push("/sign-in");
     } catch (error) {
-      setErrorMessage(error.message);
+      if (error.message === "Firebase: Error (auth/invalid-credential).") {
+        setErrorMessage("Email y/o contraseña incorrecta");
+      } else {
+        setErrorMessage(error.message);
+      }
     }
   };
 
