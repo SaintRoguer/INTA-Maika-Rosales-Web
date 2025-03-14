@@ -1,35 +1,16 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-/**
-  This file is used for controlling the global states of the components,
-  you can customize the states for the different components here.
-*/
-
-import { createContext, useContext, useReducer, useMemo } from "react";
-
-// prop-types is a library for typechecking of props
+import { createContext, useContext, useReducer, useMemo, useEffect } from "react";
 import PropTypes from "prop-types";
 
-// Material Dashboard 2 React main context
+// Create the MaterialUI context
 const MaterialUI = createContext();
 
 // Setting custom name for the context which is visible on react dev tools
 MaterialUI.displayName = "MaterialUIContext";
 
-// Material Dashboard 2 React reducer
+const cookie = require("cookie");
+
+
+// Reducer function
 function reducer(state, action) {
   switch (action.type) {
     case "MINI_SIDENAV": {
@@ -60,6 +41,13 @@ function reducer(state, action) {
       return { ...state, layout: action.value };
     }
     case "DARKMODE": {
+      // Save the darkMode preference in cookies
+      const darkModeCookie = cookie.serialize("darkMode", action.value ? "true" : "false", {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+      });
+      document.cookie = darkModeCookie;
+
       return { ...state, darkMode: action.value };
     }
     default: {
@@ -80,10 +68,19 @@ function MaterialUIControllerProvider({ children }) {
     openConfigurator: false,
     direction: "ltr",
     layout: "dashboard",
-    darkMode: false,
+    darkMode: false, // Default darkMode
   };
 
   const [controller, dispatch] = useReducer(reducer, initialState);
+
+  // Load darkMode preference from cookies on initial load
+  useEffect(() => {
+    const cookies = cookie.parse(document.cookie);
+    const savedDarkMode = cookies.darkMode === "true"; // Convert string to boolean
+    if (savedDarkMode !== undefined) {
+      dispatch({ type: "DARKMODE", value: savedDarkMode });
+    }
+  }, []);
 
   const value = useMemo(() => [controller, dispatch], [controller, dispatch]);
 

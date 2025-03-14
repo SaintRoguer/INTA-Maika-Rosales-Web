@@ -98,18 +98,6 @@ function SignIn() {
                 required
               />
             </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Recordar
-              </MDTypography>
-            </MDBox>
             {errorMessage && (
               <MDBox mt={2}>
                 <MDTypography variant="caption" color="error">
