@@ -75,15 +75,13 @@ export default function CustomTable(props) {
       default:
         break;
     }
-  
+
     if (!field) {
       if (!userData.name.trim()) errors.name = 'El nombre es requerido';
       if (!userData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email))
         errors.email = 'Email inválido';
-      if (!userData.password.trim() || userData.password.length < 6)
-        errors.password = 'La contraseña debe tener al menos 6 caracteres';
       if (!['admin', 'common'].includes(userData.role))
-        errors.role = 'El rol es requerido';
+        errors.role = 'El rol es requerido y debe ser valido';
     }
   
     return errors;
