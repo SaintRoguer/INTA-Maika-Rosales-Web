@@ -1,34 +1,18 @@
-/*!
-
-=========================================================
-* NextJS Material Dashboard v1.0.0 based on Material Dashboard React v1.9.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/nextjs-material-dashboard
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/nextjs-material-dashboard/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
 import { SWRConfig } from "swr";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import { MaterialUIControllerProvider, useMaterialUIController} from "context";
+import { MaterialUIControllerProvider, useMaterialUIController } from "context";
 import { ModalProvider } from 'context/ModalContext';
 import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
 import { ThemeProvider } from "@mui/material/styles";
+
 const MyApp = ({ Component, pageProps }) => {
   const Layout = Component.layout || (({ children }) => <>{children}</>);
-  const [controller, dispatch] = useMaterialUIController();
+  const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
   return (
@@ -39,8 +23,7 @@ const MyApp = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <title>Cobertura y gestión de suelos</title>
-        <link rel="shortcut icon" href="/favicon.png" />
-        {/*href={require("assets/img/favicon.png")}*/}
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <SWRConfig
@@ -53,7 +36,7 @@ const MyApp = ({ Component, pageProps }) => {
       >
         <Layout>
           <ThemeProvider theme={darkMode ? themeDark : theme}>
-            <ModalProvider> 
+            <ModalProvider>
               <CssBaseline />
               <Component {...pageProps} />
             </ModalProvider>
