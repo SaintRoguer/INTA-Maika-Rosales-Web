@@ -1,21 +1,13 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import InputAdornment from '@mui/material/InputAdornment';
+import React from 'react';
+import { Box, TextField, MenuItem } from '@mui/material';
+import { Controller } from 'react-hook-form';
 
 const roles = [
-  {
-    value: 'common',
-    label: 'Comun',
-  },
-  {
-    value: 'admin',
-    label: 'Admin',
-  },
+  { value: 'common', label: 'Comun' },
+  { value: 'admin', label: 'Admin' },
 ];
 
-export default function Inputs({ onInputChange, errors }) {
+export default function Inputs({ control }) {
   return (
     <Box
       component="form"
@@ -24,88 +16,83 @@ export default function Inputs({ onInputChange, errors }) {
       autoComplete="off"
     >
       <div>
-        <TextField
-          id="name"
-          label="Nombre"
-          variant="standard"
-          onChange={(e) => onInputChange('name', e.target.value)}
-          error={!!errors.name}
-          helperText={errors.name}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment
-                position="end"
-                sx={{
-                  alignSelf: 'flex-end',
-                  margin: 0,
-                  marginBottom: '5px',
-                  opacity: 0,
-                  pointerEvents: 'none',
-                }}
-              />
-            ),
-          }}
+        <Controller
+          name="name"
+          control={control}
+          rules={{ required: 'El nombre es requerido' }}
+          render={({ field, fieldState: { error } }) => (
+            <TextField
+              {...field}
+              label="Nombre"
+              variant="standard"
+              error={!!error}
+              helperText={error?.message}
+            />
+          )}
         />
-        <TextField
-          id="email"
-          label="Email"
-          variant="standard"
-          onChange={(e) => onInputChange('email', e.target.value)}
-          error={!!errors.email}
-          helperText={errors.email}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment
-                position="end"
-                sx={{
-                  alignSelf: 'flex-end',
-                  margin: 0,
-                  marginBottom: '5px',
-                  opacity: 0,
-                  pointerEvents: 'none',
-                }}
-              />
-            ),
+
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: 'Email es requerido',
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: 'Email inválido',
+            },
           }}
+          render={({ field, fieldState: { error } }) => (
+            <TextField
+              {...field}
+              label="Email"
+              variant="standard"
+              error={!!error}
+              helperText={error?.message}
+            />
+          )}
         />
-        <TextField
-          id="password"
-          label="Contraseña"
-          variant="standard"
-          onChange={(e) => onInputChange('password', e.target.value)}
-          error={!!errors.password}
-          helperText={errors.password}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment
-                position="end"
-                sx={{
-                  alignSelf: 'flex-end',
-                  margin: 0,
-                  marginBottom: '5px',
-                  opacity: 0,
-                  pointerEvents: 'none',
-                }}
-              />
-            ),
+
+        <Controller
+          name="password"
+          control={control}
+          rules={{
+            required: 'La contraseña es requerida',
+            minLength: {
+              value: 6,
+              message: 'La contraseña debe tener al menos 6 caracteres',
+            },
           }}
+          render={({ field, fieldState: { error } }) => (
+            <TextField
+              {...field}
+              label="Contraseña"
+              variant="standard"
+              error={!!error}
+              helperText={error?.message}
+            />
+          )}
         />
-        <TextField
-          id="role"
-          select
-          label="Rol"
+
+        <Controller
+          name="role"
+          control={control}
           defaultValue="common"
-          variant="standard"
-          error={!!errors.role}
-          helperText={errors.role}
-          disabled
-        >
-          {roles.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+          render={({ field }) => (
+            <TextField
+              {...field}
+              select
+              label="Rol"
+              variant="standard"
+              disabled
+            >
+              {roles.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        />
       </div>
     </Box>
   );

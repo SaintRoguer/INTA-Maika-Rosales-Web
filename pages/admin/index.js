@@ -89,6 +89,7 @@ function Administrador({ users }) {
         },
       ]}
       tableData={users}
+      roles={roles}
     />
   );
 }

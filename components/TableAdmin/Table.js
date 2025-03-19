@@ -6,6 +6,8 @@ import {
 } from 'material-react-table';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import Icon from "@mui/material/Icon";
+import { useForm, Controller } from 'react-hook-form';
+
 
 import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
 
@@ -38,8 +40,6 @@ export default function CustomTable(props) {
       : 'rgba(255, 255, 255, 1)';
 
   const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
-
-  
 
   const [userData, setUserData] = useState({
     name: '',
@@ -80,8 +80,11 @@ export default function CustomTable(props) {
       if (!userData.name.trim()) errors.name = 'El nombre es requerido';
       if (!userData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email))
         errors.email = 'Email inválido';
+      if (userData.password)
+        if (!userData.password.trim() || userData.password.length < 6)
+          errors.password = 'La contraseña debe tener al menos 6 caracteres';
       if (!['admin', 'common'].includes(userData.role))
-        errors.role = 'El rol es requerido y debe ser valido';
+        errors.role = 'El rol es requerido';
     }
   
     return errors;
@@ -89,42 +92,36 @@ export default function CustomTable(props) {
 
   const [error, setError] = useState('');
 
-  const handleCreateUser = async () => {
-    setUserData((prevData) => {
-      const errors = validateUserData(null, null, prevData); 
-      if (Object.keys(errors).some((key) => errors[key])) {
-        setValidationErrors(errors);
-        console.error('Validation Errors:', errors);
-        return prevData; 
-      }
-  
-      (async () => {
-        try {
-          const response = await fetch('/api/admin/createUser', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(prevData), 
-          });
-  
-          if (response.ok) {
-            addUserToTable(prevData); 
-            setUserData({ name: '', email: '', password: '', role: 'common' }); 
-            openModal(null); 
-          } else {
-            const errorData = await response.json();
-            setError(errorData.error);
-            openModal('error', { error: errorData.error });
-          }
-        } catch (error) {
-          setError(error.message);
-          openModal('error', { error: error.message });
-        }
-      })();
-  
-      return prevData; 
-    });
-  };
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      role: 'common',
+    },
+  });
 
+  const handleCreateUser = async (formData) => {
+    try {
+      const response = await fetch('/api/admin/createUser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        addUserToTable(formData);
+        reset(); // Reset form fields
+        closeModal();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error);
+      }
+    } catch (error) {
+      console.error('Error creating user:', error);
+      openModal('error', { error: error.message });
+    }
+  };
   const addUserToTable = (newUser) => {
     setData((prevData) => [...prevData, newUser]);
   };
@@ -234,12 +231,11 @@ export default function CustomTable(props) {
 
   const handleOpenCreateUserModal = () => {
     openModal('createUser', {
-      onInputChange: handleInputChange,
-      createUser: handleCreateUser,
-      validationErrors,
+      control,
+      onSubmit: handleSubmit(handleCreateUser),
       onClose: () => {
-        resetForm();  
-        closeModal(); 
+        reset();
+        closeModal();
       },
     });
   };
