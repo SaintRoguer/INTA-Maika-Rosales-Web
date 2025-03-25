@@ -23,7 +23,7 @@ export default function CustomTable(props) {
   const { openModal, closeModal } = useModal(); 
 
   const [validationErrors, setValidationErrors] = useState({});
-  const { tableHead, tableData } = props;
+  const { tableHead, tableData, roles } = props;
 
   const [columns, setColumns] = useState(tableHead);
   const [data, setData] = useState(tableData);
@@ -40,22 +40,6 @@ export default function CustomTable(props) {
       : 'rgba(255, 255, 255, 1)';
 
   const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
-
-  const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'common',
-  });
-
-  const handleInputChange = (field, value) => {
-    setUserData((prevData) => {
-      const updatedData = { ...prevData, [field]: value };
-      const errors = validateUserData(field, value, updatedData); 
-      setValidationErrors((prevErrors) => ({ ...prevErrors, ...errors }));
-      return updatedData; 
-    });
-  };
 
   const validateUserData = (field, value, userData) => {
     const errors = {};
@@ -219,16 +203,6 @@ export default function CustomTable(props) {
     });
   };
 
-  const resetForm = () => {
-    setUserData({
-      name: '',
-      email: '',
-      password: '',
-      role: 'common',
-    });
-    setValidationErrors({});
-  };
-
   const handleOpenCreateUserModal = () => {
     openModal('createUser', {
       control,
@@ -237,6 +211,7 @@ export default function CustomTable(props) {
         reset();
         closeModal();
       },
+      roles,
     });
   };
 

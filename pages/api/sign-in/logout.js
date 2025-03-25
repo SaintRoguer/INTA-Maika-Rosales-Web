@@ -7,14 +7,16 @@ export default async function handler(req, res) {
     const tokenCookie = cookie.serialize("token", null, {
       httpOnly: true, // Para proteger la cookie
       sameSite: "Strict",
-      maxAge: 60 * 60, // Expiración de 1 hora (en segundos)
+      maxAge: 0, // Expiración de 1 hora (en segundos)
       path: "/",
+      expires: new Date(0),
     });
     const roleCookie = cookie.serialize("role", null, {
       httpOnly: true, // Para proteger la cookie
       sameSite: "Strict",
-      maxAge: 60 * 60, // Expiración de 1 hora (en segundos)
+      maxAge: 0, // Expiración de 1 hora (en segundos)
       path: "/",
+      expires: new Date(0),
     });
     res.setHeader("Set-Cookie", [tokenCookie, roleCookie]);
     return res.status(200).json({ message: "User logged out successfully" });

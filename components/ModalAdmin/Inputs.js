@@ -2,12 +2,13 @@ import React from 'react';
 import { Box, TextField, MenuItem } from '@mui/material';
 import { Controller } from 'react-hook-form';
 
-const roles = [
-  { value: 'common', label: 'Comun' },
-  { value: 'admin', label: 'Admin' },
-];
 
-export default function Inputs({ control }) {
+export default function Inputs({ control, roles }) {
+  const roles_map = []
+  for (let i = 0; i < roles.length; i++) {
+    roles_map.push({ value: roles[i], label: roles[i] });
+  }
+
   return (
     <Box
       component="form"
@@ -85,7 +86,7 @@ export default function Inputs({ control }) {
               variant="standard"
               disabled
             >
-              {roles.map((option) => (
+              {roles_map.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

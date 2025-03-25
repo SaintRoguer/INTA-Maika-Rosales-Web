@@ -5,10 +5,9 @@ import MDButton from 'components/MDButton';
 import { useMaterialUIController } from 'context';
 import MDTypography from 'components/MDTypography';
 
-export default function BasicModal({ open, onClose, control, onSubmit }) {
+export default function BasicModal({ open, onClose, control, onSubmit, roles }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-
   return (
     <Modal
       open={open}
@@ -29,7 +28,7 @@ export default function BasicModal({ open, onClose, control, onSubmit }) {
           p: 4,
         }}
       >
-        <Inputs control={control} />
+        <Inputs control={control} roles={roles} />
         <MDButton onClick={onSubmit} color="secondary" variant="outlined" sx={{ mt: 2 }}>
           <MDTypography variant="button">Crear usuario</MDTypography>
         </MDButton>

@@ -29,10 +29,10 @@ export default function ModalManager() {
         return (
           <BasicModal
             open
-            onClose={modal.props.onClose} 
-            onInputChange={modal.props.onInputChange}
-            createUser={modal.props.createUser}
-            validationErrors={modal.props.validationErrors}
+            onClose={modal.props.onClose}
+            control={modal.props.control}
+            onSubmit={modal.props.onSubmit}
+            roles={modal.props.roles}
           />
         );
       case 'error':
