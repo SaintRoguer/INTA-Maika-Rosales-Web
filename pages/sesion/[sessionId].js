@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Admin from "layouts/Admin.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "@mui/material/Card";
-
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import LoteInfo from "components/LoteInfo/LoteInfo";
 import SessionNoteModal from "../../components/Modal/SessionNoteModal/SessionNoteModal";
-import moment, { min } from "moment";
+import moment from "moment";
 import "moment/locale/es";
-import { getAllSessions, getSessionDetails } from "../../lib/db-admin";
 import generatePdf from "../../lib/pdfGeneratorSingleSession";
 import formatCsvDataSingleSession from "../../lib/formatCsvDataSingleSession";
 import { CSVLink } from "react-csv";
@@ -21,64 +19,35 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import Icon from "@mui/material/Icon";
 import Divider from '@mui/material/Divider';
+import { useMaterialUIController } from "context";
 
 
-import {
-  useMaterialUIController,
-} from "context";
-
-
-// This function gets called at build time
-export async function getStaticPaths() {
-  const sessions = await getAllSessions();
-
-  //Get the paths we want to pre-render based on sessionsIds
-  const paths = sessions.map((session) => ({
-    params: { sessionId: session.sessionDetailId },
-  }));
-
-  // We'll pre-render only these paths at build time.
-  //{ fallback: false } means other routes should 404.
-  // fallback: true will generate that path for next time
-  return { paths, fallback: true };
-}
-
-export async function getStaticProps(context) {
-  const { params } = context;
-  const { sessionId } = params;
-
-  let sessionDetails = await getSessionDetails(sessionId);
-  sessionDetails = JSON.stringify(sessionDetails);
-
-  return {
-    props: { sessionDetails, sessionId }, // will be passed to the page component as props
-    revalidate: 1, // In seconds
-  };
-}
-
-function SessionDetail({ sessionDetails, sessionId }) {
-  const [showNotes, setShowNotes] = useState(false);
+function SessionDetail() {
   const router = useRouter();
+  const { sessionId } = router.query;
+  const [showNotes, setShowNotes] = useState(false);
+  const [notesData, setNotesData] = useState([]);
 
-  if (router.isFallback) return <h3> Cargando... </h3>;
-
-  //TODO: Poner esto en un use Effect?
-  let sessionDetailsJSON = JSON.parse(sessionDetails);
-  const [notesData, setNotesData] = useState(sessionDetailsJSON.notes);
-  //Only make request if sessionDetailsJson lotes length > 0 ?
+  // Fetch session details using SWR
+  const { data: sessionDetails, error: sessionError } = useSWR(
+    sessionId ? `/api/sessionDetails/${sessionId}` : null
+  );
+  
+  // Fetch lotes details using SWR (only after sessionDetails is available)
   const { data: dataLotes, error: errorLotes } = useSWR(
-    "/api/lotesDetails/" + router.query.sessionId,
+    sessionDetails ? `/api/lotesDetails/${sessionDetails.refID}` : null,
     !showNotes ? { refreshInterval: 1000 } : { refreshInterval: 200000 }
   );
 
-  if (!dataLotes) {
-    return <h3>Cargando...</h3>;
-  }
+  const [controller] = useMaterialUIController();
+  const { darkMode } = controller;
 
-  if (errorLotes) {
-    return <h3>Error al obtener la información de los lotes</h3>;
-  }
-
+  // Loading states
+  if (!sessionId || router.isFallback) return <h3>Cargando...</h3>;
+  if (sessionError) return <h3>Error: {sessionError.message}</h3>;
+  if (!sessionDetails) return <h3>Cargando sesión...</h3>;
+  if (errorLotes) return <h3>Error al cargar lotes</h3>;
+  if (!dataLotes) return <h3>Cargando lotes...</h3>;
   function goToDashboard(e) {
     router.push("/admin/sesiones");
   }
@@ -102,7 +71,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
       //La sesión no tiene lotes
       return (
         <GridItem xs={12} sm={12} md={12}>
-          <MDTypography variant="h4" color= {darkMode? "white" : "dark" } >  
+          <MDTypography component="div" variant="h4" color= {darkMode? "white" : "dark" } >  
               Esta sesión todavía <strong>no tiene ningún lote</strong> cargado.
             ¡Comenza a crearlos desde la aplicación móvil!
             </MDTypography>
@@ -119,11 +88,6 @@ function SessionDetail({ sessionDetails, sessionId }) {
     setNotesData(dataArray);
   };
 
-  const [controller, dispatch] = useMaterialUIController();
-  const {
-    darkMode,
-  } = controller;
-
   return (
     <div>
       <GridContainer>
@@ -134,18 +98,18 @@ function SessionDetail({ sessionDetails, sessionId }) {
                   <MDBox 
                     sx={{ whiteSpace: 'nowrap',flexGrow: 1, }}
                   >   
-                  <MDTypography variant="h4" color="white" alignItems="center" lineHeight={1} fontSize="20px"  sx={{ fontWeight: 'light', padding:"0.5rem" }}>
+                  <MDTypography component="div" variant="h4" color="white" alignItems="center" lineHeight={1} fontSize="20px"  sx={{ fontWeight: 'light', padding:"0.5rem" }}>
                     <Icon fontSize="small" color="light">
                         event
                         </Icon> Sesión creada el{" "}
                     
                         {moment(
-                          new Date(sessionDetailsJSON.date._seconds * 1000)
+                          new Date(sessionDetails.date._seconds * 1000)
                         ).format("L")}
                       {" "}
                       a las{" "}
                       {moment(
-                        new Date(sessionDetailsJSON.date._seconds * 1000),
+                        new Date(sessionDetails.date._seconds * 1000),
                         "dd/mm/yyyy"
                       ).format("HH:mm")}{" "}
                       hs
@@ -171,7 +135,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
                           <Icon fontSize="small" color="success" >
                           article
                           </Icon>
-                          <MDTypography color="success"  sx={{ fontSize: 16}} >
+                          <MDTypography component="div" color="success"  sx={{ fontSize: 16}} >
                             Descargar CSV
                           </MDTypography>
               
@@ -191,7 +155,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
                         <Icon fontSize="small" color="light">
                         picture_as_pdf_two_tone
                         </Icon>
-                        <MDTypography color="error" direction="row"  sx={{ fontSize: 16, whiteSpace: 'nowrap',minWidth:"max-content" }}>
+                        <MDTypography component="div" color="error" direction="row"  sx={{ fontSize: 16, whiteSpace: 'nowrap',minWidth:"max-content" }}>
                           Descargar PDF
                         </MDTypography>
 
@@ -206,11 +170,11 @@ function SessionDetail({ sessionDetails, sessionId }) {
                     pl="0.5rem"
                     pb="0.5rem"
                     >
-                  <MDTypography variant="h6" color="white" alignItems="center" lineHeight={1}  padding="0.5rem" verticalAlign="text-top">
+                  <MDTypography  component="div" variant="h6" color="white" alignItems="center" lineHeight={1}  padding="0.5rem" verticalAlign="text-top">
                     <Icon fontSize="small" color="light">
                           person
                           </Icon> Creada por{" "}
-                      <strong>{sessionDetailsJSON.user}</strong>
+                      <strong>{sessionDetails.user}</strong>
                   </MDTypography>
               </MDBox>
           </Card>
@@ -226,33 +190,38 @@ function SessionDetail({ sessionDetails, sessionId }) {
           <MDBox sx={{ display: "flex", flexDirection: 'column', flexGrow: 1,}}> 
             <MDBox >
           
-              <MDTypography color= {darkMode? "white" : "dark" } >  
+              <MDTypography component="div" color= {darkMode? "white" : "dark" } >  
                 <Icon style={{ marginBottom: -2 }} >description</Icon>
                 <strong> Descripción: </strong>
-                  {sessionDetailsJSON.description}
+                  {sessionDetails.description}
               </MDTypography>
             </MDBox>
 
-            <MDTypography color= {darkMode? "white" : "dark" } >  
-            <div className="row" onClick={() => setShowNotes(true)}>
-              <Icon style={{ marginBottom: -2 }} >speaker_notes</Icon>{" "}
+            <MDTypography component="div" color={darkMode ? "white" : "dark"}>
+              <MDBox 
+                component="span" 
+                display="flex" 
+                alignItems="center"
+                onClick={() => setShowNotes(true)}
+                sx={{ cursor: 'pointer' }}
+              >
+                <Icon style={{ marginBottom: -2 }}>speaker_notes</Icon>{" "}
                 Ver{" "}
                 <MDButton
-                        onClick={() => setShowNotes(true)}
-                        target="_blank"
-                        rel="noreferrer"
-                        color={darkMode? "white" : "dark" }
-                        variant="text"
-                        size="large"
-                        sx={{ whiteSpace: 'nowrap',minWidth:"max-content", padding:"0"}}
-
-                      >
-                <strong style={{ textDecoration: "underline" }}>
-                   ({sessionDetailsJSON.notes ? sessionDetailsJSON.notes.length : 0}) Notas
-                </strong>
+                  onClick={() => setShowNotes(true)}
+                  target="_blank"
+                  rel="noreferrer"
+                  color={darkMode ? "white" : "dark"}
+                  variant="text"
+                  size="large"
+                  sx={{ whiteSpace: 'nowrap', minWidth: "max-content", padding: "0" }}
+                >
+                  <strong style={{ textDecoration: "underline" }}>
+                    ({sessionDetails.notes ? sessionDetails.notes.length : 0}) Notas
+                  </strong>
                 </MDButton>
                 {" "}de la sesión
-            </div>
+              </MDBox>
             </MDTypography>
 
           </MDBox>
@@ -265,7 +234,7 @@ function SessionDetail({ sessionDetails, sessionId }) {
             }}
             title="Notas de la sesión"
             notes={notesData}
-            sessionDetailsId={sessionDetailsJSON.id}
+            sessionDetailsId={sessionDetails.id}
             onUpdate={handleOnUpdate}
             sessionDetailIDDoc={sessionId}
           />
