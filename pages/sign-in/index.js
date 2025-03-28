@@ -40,9 +40,18 @@ function SignIn() {
       });
 
       if (!response.ok) {
-        throw new Error(data.message || "Error al iniciar sesión");
+        throw new Error("Error al iniciar sesión");
       }
-      router.push("/sign-in");
+
+      const data = await response.json(); // Leer la respuesta del backend
+      const role = data.role; // Obtener el rol
+
+      // 🌟 Redirigir según el rol obtenido
+      if (role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/sesiones");
+      }
     } catch (error) {
       if (error.message === "Firebase: Error (auth/invalid-credential).") {
         setErrorMessage("Email y/o contraseña incorrecta");

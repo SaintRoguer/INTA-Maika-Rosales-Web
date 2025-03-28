@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       path: "/",
     });
     res.setHeader("Set-Cookie", [tokenCookie, roleCookie]);
-    return res.status(200).json({ message: "User logged successfully" });
+    return res.status(200).json({ message: "User logged successfully", role});
   } catch (error) {
     console.error("Error logging user:", error);
     return res.status(409).json({ error: " " + error });
