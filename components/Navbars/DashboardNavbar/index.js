@@ -95,6 +95,28 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
 
+  const handleLogout = async () => {
+    try {
+      // Send a POST request to the logout API endpoint
+      const response = await fetch("/api/sign-in/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      // If the logout is successful, redirect to the login page
+      if (response.ok) {
+        window.location.href = "/sign-in";
+        console.error("logged out");
+      } else {
+        console.error("Failed to log out");
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -108,9 +130,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+        <NotificationItem icon={<Icon>logout</Icon>} title="Cerrar sesión" onClick={handleLogout}/>
     </Menu>
   );
 
@@ -140,13 +160,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
-              <Link href="/authentication/sign-in/basic">
-                <a> 
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-                </a>
-              </Link>
               <IconButton
                 size="small"
                 disableRipple
@@ -177,7 +190,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               >
-                <Icon sx={iconsStyle}>notifications</Icon>
+                <Icon sx={iconsStyle}>account_circle</Icon>
               </IconButton>
               {renderMenu()}
             </MDBox>
