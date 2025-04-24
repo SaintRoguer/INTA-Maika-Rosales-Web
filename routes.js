@@ -26,9 +26,9 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/profile",
-    name: "Perfil",
-    icon: <Icon fontSize="small">person</Icon>,
+    path: "/compartidos",
+    name: "Compartidos conmigo",
+    icon: <Icon fontSize="small">group</Icon>,
     layout: "/admin",
   },
   {

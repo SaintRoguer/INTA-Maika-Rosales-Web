@@ -6,19 +6,26 @@ import {
 } from 'material-react-table';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import Icon from "@mui/material/Icon";
+
 import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
+
 import { updateSession } from "../../lib/db-client";
+
 import { useMaterialUIController} from "context";
-import { useModal } from "context/ModalContext"; 
-import ModalManager from "components/ModalManager/ModalManager";
+
+
 import { darken, lighten, useTheme } from '@mui/material';
 import { color, padding } from "@mui/system";
 
+
 export default function CustomTable(props) {
-  const { openModal, closeModal } = useModal(); 
+  
+
   const [validationErrors, setValidationErrors] = useState({});
   const { tableHead, tableData } = props;
   const [isEditing, setIsEditing] = useState(false); // Track editing state
+
+
   const [columns, setColumns] = useState(tableHead);
   const [data, setData] = useState(tableData);
   const [controller] = useMaterialUIController();
@@ -72,16 +79,6 @@ export default function CustomTable(props) {
     table.setEditingRow(null); //exit editing mode
   };
 
-  const handleChangeSharedPermission = (row) => {
-    const sessionId = row.original.id;
-    openModal('share', {
-      onClose: () => {
-        closeModal();
-      },
-      sessionId,
-    });
-  };
-
   const table = useMaterialReactTable({
     columns,
     data, 
@@ -118,42 +115,37 @@ export default function CustomTable(props) {
     }),
     onEditingRowCancel: () => (setValidationErrors({}),setIsEditing(false)),
     onEditingRowSave: handleSaveRow,
-    renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: 'flex', gap: '1rem' }}>
+    renderRowActions: ({ row, table }) => {
+      const hasEditPermission = !row.original.permission || row.original.permission === 'Editor';      
+      return (
         <Box sx={{ display: 'flex', gap: '1rem' }}>
-          <Tooltip title="Editar">
-            <IconButton
-              onClick={() => {
-                setIsEditing(true);
-                table.setEditingRow(row);
-              }}
-            >
-              <Icon
-                sx={{ color: darkMode ? '#FFFFFF' : '#000000' }}
-                fontSize="small"
+          {hasEditPermission ? (
+            <Tooltip title="Editar">
+              <IconButton
+                onClick={() => {
+                  setIsEditing(true);
+                  table.setEditingRow(row);
+                }}
               >
-                edit
-              </Icon>
-            </IconButton>
-          </Tooltip>
+                <Icon sx={{ color: darkMode ? '#FFFFFF' : '#000000' }} fontSize="small">
+                  edit
+                </Icon>
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="No tiene suficientes permisos">
+              <span> {/* Wrapper span for disabled button tooltip */}
+                <IconButton disabled>
+                  <Icon sx={{ color: darkMode ? '#666666' : '#AAAAAA' }} fontSize="small">
+                    edit
+                  </Icon>
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
         </Box>
-        <Box sx={{ display: 'flex', gap: '1rem' }}>
-          <Tooltip title="Cambiar permisos">
-            <IconButton onClick={() => handleChangeSharedPermission(row)}>
-              <Icon
-                sx={{ color: darkMode ? '#FFFFFF' : '#000000' }}
-                fontSize="small"
-              >
-                group
-              </Icon>
-            </IconButton>
-          </Tooltip>
-        </Box>
-
-      </Box>
-      
-      
-    ),
+      );
+    },
     muiTableHeadProps: {
       sx: {
         padding: '0rem',
@@ -257,7 +249,6 @@ export default function CustomTable(props) {
 return(
 <div style={{ overflowX: 'auto' }}>
   <MaterialReactTable table={table}/>
-  <ModalManager /> {/* Render the ModalManager */}
 </div>
 )}
 

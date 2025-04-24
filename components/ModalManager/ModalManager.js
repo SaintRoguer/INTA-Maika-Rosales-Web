@@ -3,6 +3,7 @@ import ModalChangePassword from '../ModalAdmin/ModalChangePassword';
 import ModalDeleteUser from '../ModalAdmin/ModalDeleteUser';
 import BasicModal from '../ModalAdmin/Modal';
 import ModalError from '../ModalAdmin/ModalError';
+import ShareModal from '../Modal/ShareModal/ShareModal';
 
 export default function ModalManager() {
   const { modal, closeModal } = useModal();
@@ -43,6 +44,14 @@ export default function ModalManager() {
             error={modal.props.error}
           />
         );
+      case 'share':
+        return (
+          <ShareModal
+            open
+            onClose={closeModal}
+            sessionId={modal.props.sessionId}
+          />
+        )
       default:
         return null;
     }
