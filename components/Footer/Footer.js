@@ -30,7 +30,7 @@ export default function Footer(props) {
           <span>
             &copy; {1900 + new Date().getYear()}{" "}
             <a
-              href="https://cs.uns.edu.ar/home/"
+              href="cs.uns.edu.ar/home/"
               target="_blank"
               className={classes.a}
             >

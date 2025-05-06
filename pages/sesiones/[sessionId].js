@@ -197,7 +197,6 @@ function SessionDetail() {
               </MDTypography>
             </MDBox>
 
-            <MDTypography component="div" color={darkMode ? "white" : "dark"}>
               <MDBox 
                 component="span" 
                 display="flex" 
@@ -205,25 +204,25 @@ function SessionDetail() {
                 onClick={() => setShowNotes(true)}
                 sx={{ cursor: 'pointer' }}
               >
-                <Icon style={{ marginBottom: -2 }}>speaker_notes</Icon>{" "}
-                Ver{" "}
-                <MDButton
-                  onClick={() => setShowNotes(true)}
-                  target="_blank"
-                  rel="noreferrer"
-                  color={darkMode ? "white" : "dark"}
-                  variant="text"
-                  size="large"
-                  sx={{ whiteSpace: 'nowrap', minWidth: "max-content", padding: "0" }}
-                >
-                  <strong style={{ textDecoration: "underline" }}>
-                    ({sessionDetails.notes ? sessionDetails.notes.length : 0}) Notas
-                  </strong>
-                </MDButton>
-                {" "}de la sesión
+                <MDTypography component="div" color={darkMode ? "white" : "dark"}>
+                  <Icon style={{ marginBottom: -2 }}>speaker_notes</Icon>{" "}
+                  Ver {" "}
+                  <MDButton
+                    onClick={() => setShowNotes(true)}
+                    target="_blank"
+                    rel="noreferrer"
+                    color={darkMode ? "white" : "dark"}
+                    variant="text"
+                    size="large"
+                    sx={{ whiteSpace: 'nowrap', minWidth: "max-content", padding: "0" }}
+                  >
+                    <strong style={{ textDecoration: "underline" }}>
+                      ({sessionDetails.notes ? sessionDetails.notes.length : 0}) Notas
+                    </strong>
+                  </MDButton>
+                  {"  "} de la sesión
+                </MDTypography>
               </MDBox>
-            </MDTypography>
-
           </MDBox>
         </GridItem>
 

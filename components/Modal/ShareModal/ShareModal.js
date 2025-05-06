@@ -18,7 +18,6 @@ import { useMaterialUIController } from 'context';
 import MDTypography from 'components/MDTypography';
 import Icon from '@mui/material/Icon';
 import { Avatar } from "@mui/material";
-import { set } from 'react-hook-form';
 
 export default function ShareModal({ open, onClose, sessionId }) {
   const [controller] = useMaterialUIController();
@@ -35,13 +34,11 @@ export default function ShareModal({ open, onClose, sessionId }) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // 1. Fetch all users
         const usersResponse = await fetch('/api/compartidos/getSharedUsers');
         if (!usersResponse.ok) throw new Error('Failed to fetch users');
         const usersData = await usersResponse.json();
         const allUsers = usersData.users || [];
-  
-        // 2. Find shared users
+
         const sharedUsers = allUsers
           .filter(user => sessionId in (user.shared || {}))
           .map(user => ({
@@ -49,7 +46,6 @@ export default function ShareModal({ open, onClose, sessionId }) {
             permission: user.shared[sessionId]
           }));
   
-        // 3. Update state
         setAllUsers(allUsers);
         setSharedUsers(sharedUsers);
       } catch (error) {
@@ -109,7 +105,6 @@ export default function ShareModal({ open, onClose, sessionId }) {
     .then((data) => {
       console.log('Permissions synchronized successfully:', data);
     })
-    onClose();
     setIsLoading(false);
   };
 

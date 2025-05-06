@@ -41,7 +41,7 @@ export default function CustomTable(props) {
     /*router.push("/sesion/[id]", `/sesion/${rowData.id}`, {
       shallow: true,
     });*/
-    window.location.replace(`/sesion/${rowData}`);
+    window.location.replace(`/sesiones/${rowData}`);
   };
    //UPDATE action
    const handleSaveRow = async ({ row, table,values }) => {
@@ -102,7 +102,13 @@ export default function CustomTable(props) {
     },
     displayColumnDefOptions: {
       'mrt-row-actions': {
-        header: 'Editar'
+        header: 'Editar',
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       }
     },
     muiTableBodyRowProps: ({ row }) => ({
@@ -119,7 +125,7 @@ export default function CustomTable(props) {
     onEditingRowCancel: () => (setValidationErrors({}),setIsEditing(false)),
     onEditingRowSave: handleSaveRow,
     renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: 'flex', gap: '1rem' }}>
+      <Box sx={{ display: 'flex', gap: '1rem', justifyContent: "center" ,width:"100%" }}>
         <Box sx={{ display: 'flex', gap: '1rem' }}>
           <Tooltip title="Editar">
             <IconButton

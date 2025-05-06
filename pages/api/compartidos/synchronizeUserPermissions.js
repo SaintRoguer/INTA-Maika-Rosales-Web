@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    await synchronizeUsersPermissions(req);  
+    await synchronizeUsersPermissions(req,res);  
     return res.status(200);
   } catch (error) {
     console.error("Error fetching sessions:", error);
