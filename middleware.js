@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-
 const cookie = require("cookie");
+
 const roleRoutes = {
-  admin: ["/admin", "/sesiones", "/ayuda"],
+  admin: ["/admin", "/sesiones", "/ayuda", "/sesiones/:path*"], // "admin" puede acceder a todas las rutas
   common: ["/sesiones", "/ayuda"], // "common" puede acceder a "/sesiones" y sus subrutas
 };
 
@@ -20,7 +20,7 @@ export async function middleware(req) {
       console.log("⛔ No autenticado, redirigiendo a /sign-in...");
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }
-    return NextResponse.next(); // Permite acceso a /sign-in
+    return NextResponse.next();
   }
 
   // ✅ Si el usuario está autenticado y en /sign-in, redirigirlo según su rol
@@ -28,18 +28,23 @@ export async function middleware(req) {
     console.log("🔄 Usuario autenticado en /sign-in, redirigiendo...");
     return NextResponse.redirect(
       new URL(
-        role === "admin"
-          ? "/admin"
-          : "/sesiones",
+        role === "admin" ? "/admin" : "/sesiones",
         req.url
       )
     );
   }
 
-  // 🔒 Verificar si el usuario intenta acceder a una ruta no permitida según su rol
-  //const allowedRoutes = roleRoutes[role] || [];
-  //const isAllowed = allowedRoutes.some((route) => pathname.startsWith(route));
-  const isAllowed = roleRoutes[role]?.includes(pathname) ?? false;
+  // 🔒 Verificar si el usuario tiene acceso a la ruta solicitada
+  const allowedRoutes = roleRoutes[role] || [];
+  const isAllowed = allowedRoutes.some(route => {
+    // Para rutas con parámetros como '/sesiones/:path*'
+    if (route.includes(':path*')) {
+      const baseRoute = route.replace('/:path*', '');
+      return pathname.startsWith(baseRoute);
+    }
+    // Para rutas exactas o que comienzan con la ruta permitida
+    return pathname === route || pathname.startsWith(route + '/');
+  });
 
   if (!isAllowed) {
     console.log(`🚫 Acceso denegado a ${pathname} para el rol ${role}`);
@@ -54,5 +59,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/admin", "/sesiones/:path*", "/ayuda", "/sign-in"], // Rutas protegidas
+  matcher: ["/admin", "/sesiones", "/sesiones/:path*", "/ayuda", "/sign-in"],
 };
