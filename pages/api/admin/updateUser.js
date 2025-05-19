@@ -1,3 +1,4 @@
+import { debug } from "util";
 import { updateUserData } from "../../../lib/db-admin";
 
 export default async function handler(req, res) {
@@ -14,11 +15,11 @@ export default async function handler(req, res) {
       email,
       role,
       photoUrl,
-      password
+      password,
     });
     return res.status(200).json({ message: "User created successfully" });
   } catch (error) {
     console.error("Error creating user:", error);
-    return res.status(409).json({ error: " " +error });
+    return res.status(409).json({ error: " " + error });
   }
 }
