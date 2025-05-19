@@ -18,6 +18,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditionModal from "../Modal/EditionModal";
+import Alarms from "./Alarms/Alarms";
 
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -227,6 +228,20 @@ export default function LoteInfo(props) {
                       ),
                     },
                   ]}
+                />
+              </Card>
+              <Card sx={{pl:"20px", pr:"20px", pt:"20px", pb:"20px"}}>
+                <MDTypography color={ darkMode ? "white" :"dark"}  fontSize="12px" fontWeight="bold" justifySelf="flex-end">
+                  <strong>Alarmas</strong>
+                </MDTypography>
+                <Alarms
+                  windVelocity={loteData.windVelocity}
+                  soilSensitivity={loteData.soilSensitivity}
+                  averageAfter={loteData.averageAfter}
+                  averageBefore={loteData.averageBefore}
+                  totalImagesAfter={loteData.totalImagesAfter}
+                  totalImagesBefore={loteData.totalImagesBefore}
+                  loteDetailId={loteDetailId}
                 />
               </Card>
             </Card>

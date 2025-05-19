@@ -4,6 +4,7 @@ import ModalDeleteUser from '../ModalAdmin/ModalDeleteUser';
 import BasicModal from '../ModalAdmin/Modal';
 import ModalError from '../ModalAdmin/ModalError';
 import ShareModal from '../Modal/ShareModal/ShareModal';
+import AlarmModal from '../Modal/alarmModal/alarmModal';
 
 export default function ModalManager() {
   const { modal, closeModal } = useModal();
@@ -52,6 +53,17 @@ export default function ModalManager() {
             sessionId={modal.props.sessionId}
           />
         )
+      case 'alarm':
+        return (
+          <AlarmModal
+            open
+            onClose={closeModal}
+            onSubmit={modal.props.onSubmit}
+            windVelocity={modal.props.windVelocity}
+            soilSensitivity={modal.props.soilSensitivity}
+            loteDetailId={modal.props.loteDetailId}
+          />
+        );
       default:
         return null;
     }
