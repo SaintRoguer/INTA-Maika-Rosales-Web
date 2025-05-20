@@ -22,9 +22,10 @@ import Divider from '@mui/material/Divider';
 import { useMaterialUIController } from "context";
 
 
+
 function SessionDetail() {
   const router = useRouter();
-  const { sessionId } = router.query;
+  const { sessionId, permission } = router.query;
   const [showNotes, setShowNotes] = useState(false);
   const [notesData, setNotesData] = useState([]);
 
@@ -63,7 +64,7 @@ function SessionDetail() {
       return (
         <>
           {dataLotes.map((lote) => (
-            <LoteInfo key={lote.loteDetailId} {...lote} />
+            <LoteInfo permission={permission} key={lote.loteDetailId} {...lote} />
           ))}
         </>
       );

@@ -12,6 +12,8 @@ import { MRT_Localization_ES } from 'material-react-table/locales/es/index.js';
 import { updateSession } from "../../lib/db-client";
 
 import { useMaterialUIController} from "context";
+import { useRouter } from 'next/router';
+
 
 
 import { darken, lighten, useTheme } from '@mui/material';
@@ -24,7 +26,7 @@ export default function CustomTable(props) {
   const [validationErrors, setValidationErrors] = useState({});
   const { tableHead, tableData } = props;
   const [isEditing, setIsEditing] = useState(false); // Track editing state
-
+  const router = useRouter();
 
   const [columns, setColumns] = useState(tableHead);
   const [data, setData] = useState(tableData);
@@ -44,11 +46,13 @@ export default function CustomTable(props) {
    // light or dark font color
    const fontColor = darkMode ? theme.palette.common.white : theme.palette.common.black;
 
-  const goToSessionDetail = (rowData) => {
-    /*router.push("/sesion/[id]", `/sesion/${rowData.id}`, {
-      shallow: true,
-    });*/
-    window.location.replace(`/sesion/${rowData}`);
+    const goToSessionDetail = (rowData, permission) => {
+    router.push({
+      pathname: `/sesiones/${rowData}`,
+      query: { 
+        permission: permission,
+      }
+    });
   };
    //UPDATE action
    const handleSaveRow = async ({ row, table,values }) => {
@@ -106,7 +110,7 @@ export default function CustomTable(props) {
       onClick: !isEditing
         ? (event) => {
             const columnIndex = event.target.cellIndex;
-            if (columnIndex !== undefined) goToSessionDetail(row.id);
+            if (columnIndex !== undefined) goToSessionDetail(row.id, row.original.permission);
           }
         : undefined, // Disable click when editing
       sx: {

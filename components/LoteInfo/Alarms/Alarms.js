@@ -5,8 +5,6 @@ import ModalManager from "components/ModalManager/ModalManager";
 import Card from "@mui/material/Card";
 import { useModal } from "context/ModalContext";
 import { useMaterialUIController } from "context";
-import { and } from 'firebase/firestore';
-
 
 export default function Alarms(props) {
     const { 
@@ -16,20 +14,45 @@ export default function Alarms(props) {
         averageBefore, 
         totalImagesAfter, 
         totalImagesBefore, 
-        loteDetailId
+        loteDetailId,
+        permission
     } = props;
     
     const { openModal, closeModal } = useModal();
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
-    
-    // Local state with prop synchronization
+
+   const editDescription = (color) => {
+        return (
+            permission === "Editor" || permission === undefined ? (
+                <MDButton 
+                    variant="outlined" 
+                    color={color} 
+                    onClick={handleOpenChangeCoefficientsModal}
+                    sx={{ ml: 2 }} // Add margin between icon and button
+                >
+                    <Icon>landslide</Icon>
+                    <strong>Cambiar coeficientes</strong>
+                </MDButton>
+            ) : (       
+                <MDButton 
+                    variant="outlined" 
+                    color="black" 
+                    disabled
+                    sx={{ ml: 2 }} // Consistent spacing
+                >
+                    <Icon>landslide</Icon>
+                    <strong>Cambiar coeficientes</strong>
+                </MDButton>
+            )
+        );
+    }
+
     const [localCoefficients, setLocalCoefficients] = React.useState({
         windVelocity: propWindVelocity,
         soilSensitivity: propSoilSensitivity
     });
 
-    // Sync local state when props change
     React.useEffect(() => {
         setLocalCoefficients({
             windVelocity: propWindVelocity,
@@ -47,7 +70,6 @@ export default function Alarms(props) {
     };
 
     const handleChangeCoefficients = async(newWindVelocity, newSoilSensitivity, loteDetailId) => {
-        // Update local state immediately for responsive UI
         setLocalCoefficients({
             windVelocity: newWindVelocity,
             soilSensitivity: newSoilSensitivity
@@ -75,11 +97,6 @@ export default function Alarms(props) {
             console.error('Error changing coefficients:', error);
             openModal('error', { error: error.message });
          }
-        
-        
-        // Here you would typically call your backend:
-        // await api.updateCoefficients(newWindVelocity, newSoilSensitivity);
-        console.log("Updated coefficients:", { newWindVelocity, newSoilSensitivity });      
     };
 
     const calculateDangerIndex = () => {
@@ -94,9 +111,9 @@ export default function Alarms(props) {
     const alarm = () => {
         if (totalImagesAfter === 0 && totalImagesBefore === 0) {
             return (
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Tooltip title="El lote no posee imágenes">
-                        <Icon color="warning">warning</Icon>
+                        <Icon fontSize='large' color="warning">warning</Icon>
                     </Tooltip>
                 </div>
             );
@@ -104,70 +121,52 @@ export default function Alarms(props) {
         
         if (localCoefficients.soilSensitivity === undefined) {
             return (
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Tooltip title="El lote no posee el coeficiente de sensibilidad del suelo">
-                        <MDButton variant="outlined" color="warning" onClick={handleOpenChangeCoefficientsModal}>
-                            <Icon>warning</Icon>
-                            
-                            <strong>Cambiar coeficientes</strong>
-                        </MDButton>
+                        <Icon fontSize='large' color="warning">warning</Icon>
                     </Tooltip>
+                    {editDescription("warning")}
                 </div>
             );
         }
 
         const dangerIndex = calculateDangerIndex();
 
-        if (dangerIndex <= 20) {
-            return (
-                <div>
+        return (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                {dangerIndex <= 20 ? (
                     <Tooltip title="La erosión eólica es poco probable">
-                        <Icon color="success">check_circle</Icon>
+                        <Icon fontSize='large' color="success">check_circle</Icon>
                     </Tooltip>
-                    <MDButton variant="outlined" color="info" onClick={handleOpenChangeCoefficientsModal}>
-                            <Icon>landslide</Icon>
-                            
-                            <strong>Cambiar coeficientes</strong>
-                    </MDButton>
-                </div>
-            );
-        } else if (dangerIndex <= 40) {
-            return (
-                <div>
+                ) : dangerIndex <= 40 ? (
                     <Tooltip title="La erosión eólica podría ser moderada dependiendo de las condiciones específicas del lote">
-                        <Icon sx={{ color: '#ffc400' }}>warning</Icon>                   
+                        <Icon fontSize='large' sx={{ color: '#ffc400' }}>warning</Icon>
                     </Tooltip>
-                     <MDButton variant="outlined" color="info" onClick={handleOpenChangeCoefficientsModal}>
-                            <Icon>landslide</Icon>
-                            
-                            <strong>Cambiar coeficientes</strong>
-                    </MDButton>
-                </div>
-            );
-        } else {
-            return (
-                <div>
+                ) : (
                     <Tooltip title="Hay un riesgo significativo de erosión eólica">
-                        <Icon color="error">error</Icon>
+                        <Icon color="error" fontSize='large'>error</Icon>
                     </Tooltip>
-                     <MDButton variant="outlined" color="info" onClick={handleOpenChangeCoefficientsModal}>
-                            <Icon>landslide</Icon>
-                            
-                            <strong>Cambiar coeficientes</strong>
-                    </MDButton>
-                </div>
-            );
-        }
+                )}
+                {editDescription("info")}
+            </div>
+        );
     };
 
     return (
-        <>
-            <Card style={{backgroundColor: darkMode ? "#1f283e" :'#42424a', borderRadius: "10px", padding: "1rem", marginBottom: "1rem"}}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    {alarm()}
-                    <ModalManager />
-                </div>
-            </Card>
-        </>
+        <Card style={{
+            backgroundColor: darkMode ? "#1f283e" : '#42424a', 
+            borderRadius: "10px", 
+            padding: "1rem", 
+            marginBottom: "1rem"
+        }}>
+            <div style={{ 
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "center" 
+            }}>
+                {alarm()}
+                <ModalManager />
+            </div>
+        </Card>
     );
 }

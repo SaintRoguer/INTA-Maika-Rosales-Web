@@ -371,7 +371,7 @@ export default function CustomTable(props) {
   return (
     <div style={{ overflowX: 'auto' }}>
       <MaterialReactTable table={table} />
-      <ModalManager /> {/* Render the ModalManager */}
+      <ModalManager /> 
     </div>
   );
 }
