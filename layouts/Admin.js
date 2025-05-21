@@ -11,11 +11,8 @@ import logo from "assets/img/logo.png";
 import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
 import { ThemeProvider } from "@mui/material/styles";
-import MDBox from "components/MDBox";
-import Icon from "@mui/material/Icon";
-import routes from "routes.js";
-
-
+import useSWR from "swr";
+import getRoutesByRole from "routes";
 
 export default function Admin({ children, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
@@ -55,7 +52,17 @@ export default function Admin({ children, ...rest }) {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const transformedRoutes = routes.map(route => ({
+  const { data: role, error: roleError, isLoading } = useSWR(
+    `/api/routes/routesPermission`
+  );
+
+  const roledRoutes = React.useMemo(() => {
+    if (isLoading) return []; // or return loadingRoutes if you want
+    if (!role) return []; // if no role (error case)
+    return getRoutesByRole(role.role);
+    }, [role, isLoading]);
+
+  const transformedRoutes = roledRoutes.map(route => ({
     type: "collapse",
     name: route.name,
     key: route.path.substring(1),
