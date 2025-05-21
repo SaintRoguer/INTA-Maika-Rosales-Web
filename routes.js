@@ -34,7 +34,6 @@ const allRoutes = [
 const getRoutesByRole = (role) => {
   if (!role) {
     return []};
-  console.log("entre");
   return allRoutes.filter(route => {
     return route.access.includes(role);
   });
