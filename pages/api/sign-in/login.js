@@ -14,18 +14,20 @@ export default async function handler(req, res) {
     const role = await getUserRole(uid);
     const tokenCookie = cookie.serialize("token", token, {
       httpOnly: true, // Para proteger la cookie
+      secure: true,
       sameSite: "Strict",
       maxAge: 60 * 60, // Expiración de 1 hora (en segundos)
       path: "/",
     });
     const roleCookie = cookie.serialize("role", role, {
       httpOnly: true, // Para proteger la cookie
+      secure: true,
       sameSite: "Strict",
       maxAge: 60 * 60, // Expiración de 1 hora (en segundos)
       path: "/",
     });
     res.setHeader("Set-Cookie", [tokenCookie, roleCookie]);
-    return res.status(200).json({ message: "User logged successfully", role});
+    return res.status(200).json({ message: "User logged successfully", role });
   } catch (error) {
     console.error("Error logging user:", error);
     return res.status(409).json({ error: " " + error });
