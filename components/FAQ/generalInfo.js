@@ -106,7 +106,12 @@ const dataGeneralInfo = (darkMode) => ({
           , en representación del INTA, extensión Bahía Blanca. Esta idea fue
           implementada como Proyecto Final de carrera de la carrera Ingeniería
           en Sistemas de Información por los alumnos Juan Jouglard y Matias
-          Massetti, bajo la dirección de Martin Larrea y Dana Uribarri.
+          Massetti, bajo la dirección de Martin Larrea y Dana Uribarri.{" "}
+          <br></br>
+          En 2024/2025 se continuó con la mejora del sitio web como Proyecto
+          Final de carrera de la carrera Ingeniería en Sistemas de Información
+          por los alumnos Santiago Rosales Guinzburg y Nahuel Maiká Fanessi,
+          bajo la direccion de Martin Larrea y Dana Uribarri.
         </p>
       ),
     },
@@ -122,10 +127,10 @@ const dataGeneralInfo = (darkMode) => ({
       content: (
         <p>
           En la parte superior derecha en esta web hay un botón con el símbolo
-          de una rueda, al presionarlo encontrarás la opción{" "}
-          <strong>'Dar feedback'</strong>. También podés comunicarte por mail,
+          de un engranaje, al presionarlo encontrarás la opción{" "}
+          <strong>'Dar feedback'</strong>. También podés comunicarte por email,
           escribiendo a las siguientes direcciones: jouglardjuan@gmail.com /
-          matiasmassetti@gmail.com .
+          matiasmassetti@gmail.com / nahuelmaika@gmail.com.
         </p>
       ),
     },

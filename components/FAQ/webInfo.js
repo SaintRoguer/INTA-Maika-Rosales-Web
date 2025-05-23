@@ -11,11 +11,18 @@ const dataWebInfo = {
       ),
       content: (
         <p>
-          Podés ver toda la información que fue cargada en la aplicación móvil:
-          sesiones, lotes, imágenes, pasturas, promedios y notas. Tendrás la
+          Podés ver toda la información que fue cargada por vos en la aplicación
+          móvil o por otro usuario que te haya compartido su sesión. Es decir,
+          sesiones, lotes, imágenes, pasturas, promedios, notas y alarmas de
+          erosión eólica. En el apartado de <strong>Sesiones </strong> podras
+          ver todas tus sesiones mientras que en el apartado de{" "}
+          <strong>Compartidos Conmigo </strong>podras ver todas las sesiones que
+          otros usuarios hayan compartido con vos. <br></br>Tendrás la
           posibilidad de buscar, filtrar y ordenar las sesiones por descripción,
-          nombre del creador o creadora, fecha, etc. Además, podes descargar la
-          información en dos formatos: CSV y PDF
+          nombre del creador o creadora, fecha, etc. Ademas, vas a poder darle
+          permisos a otros usuarios para que puedan ver o editar tus sesiones.
+          <br></br>Por último, podes descargar la información en dos formatos:
+          CSV y PDF
         </p>
       ),
     },
@@ -27,10 +34,14 @@ const dataWebInfo = {
       ),
       content: (
         <p>
-          Podés editar la descripción de una sesión, lote o pastura. A
-          diferencia de la aplicación móvil, en la web no permitiremos eliminar
-          sesiones, lotes, pasturas, imágenes o notas, hasta que no se
-          implemente el sistema de Registro/Logueo de usuarios.
+          Vas a poder editar la descripción de una sesión, lote o pastura asi
+          como las notas que estas tengan. Tambien los coeficientes para el
+          calculo de la alarma de peligrosidad de erosión eólica. A diferencia
+          de la aplicación móvil, en la web no permitimos eliminar sesiones,
+          lotes, pasturas, imágenes o notas. Si bien ya esta implementado el
+          sistema de usuarios, como no se pudo rehacer la aplicación movil para
+          sea compatible con la web, la opción de eliminar de eliminar sigue sin
+          estar disponible.
         </p>
       ),
     },
