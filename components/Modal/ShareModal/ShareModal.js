@@ -221,7 +221,7 @@ export default function ShareModal({ open, onClose, sessionId }) {
                             color={darkMode ? "white" : "dark"}
                             sx={{ 
                               display: 'block',
-                              marginLeft: 7, // Adjust to align with name
+                              marginLeft: 7, 
                               marginTop: 0.5 
                             }}
                           >
@@ -297,7 +297,7 @@ export default function ShareModal({ open, onClose, sessionId }) {
                           color={darkMode ? "white" : "dark"}
                           sx={{ 
                             display: 'block',
-                            marginLeft: 7, // Adjust to align with name
+                            marginLeft: 7, 
                             marginTop: 0.5 
                           }}
                         >

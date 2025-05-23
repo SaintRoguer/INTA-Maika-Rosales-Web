@@ -1,49 +1,42 @@
-/*!
-
-=========================================================
-* * NextJS Material Dashboard v1.0.0 based on Material Dashboard React v1.9.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/nextjs-material-dashboard
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/nextjs-material-dashboard/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import Icon from "@mui/material/Icon";
 
-
-const dashboardRoutes = [
+const allRoutes = [
   {
     path: "/sesiones",
     name: "Sesiones",
     icon: <Icon fontSize="small">computer</Icon>,
     layout: "/admin",
+    access: ['common'] 
   },
   {
     path: "/compartidos",
     name: "Compartidos conmigo",
     icon: <Icon fontSize="small">group</Icon>,
     layout: "/admin",
+    access: ['common']
   },
   {
     path: "/ayuda",
     name: "Ayuda",
     icon: <Icon fontSize="small">help</Icon>,
     layout: "/admin",
+    access: ['common']
   },
   {
     path: "/admin",
     name: "Admin",
     icon: <Icon fontSize="small">admin_panel_settings</Icon>,
     layout: "/admin",
+    access: ['admin']
   },
 ];
 
-export default dashboardRoutes;
+const getRoutesByRole = (role) => {
+  if (!role) {
+    return []};
+  return allRoutes.filter(route => {
+    return route.access.includes(role);
+  });
+};
 
+export default getRoutesByRole;
