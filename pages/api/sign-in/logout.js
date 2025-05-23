@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     const tokenCookie = cookie.serialize("token", null, {
       httpOnly: true, // Para proteger la cookie
       secure: true,
-      sameSite: "Strict",
+      sameSite: "lax",
       maxAge: 0, // Expiración de 1 hora (en segundos)
       path: "/",
       expires: new Date(0),
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const roleCookie = cookie.serialize("role", null, {
       httpOnly: true, // Para proteger la cookie
       secure: true,
-      sameSite: "Strict",
+      sameSite: "lax",
       maxAge: 0, // Expiración de 1 hora (en segundos)
       path: "/",
       expires: new Date(0),
