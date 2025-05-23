@@ -15,14 +15,14 @@ export default async function handler(req, res) {
     const tokenCookie = cookie.serialize("token", token, {
       httpOnly: true, // Para proteger la cookie
       secure: true,
-      sameSite: "lax",
+      sameSite: "Strict",
       maxAge: 60 * 60, // Expiración de 1 hora (en segundos)
       path: "/",
     });
     const roleCookie = cookie.serialize("role", role, {
       httpOnly: true, // Para proteger la cookie
       secure: true,
-      sameSite: "lax",
+      sameSite: "Strict",
       maxAge: 60 * 60, // Expiración de 1 hora (en segundos)
       path: "/",
     });
