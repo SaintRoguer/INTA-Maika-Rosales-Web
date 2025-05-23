@@ -1,17 +1,17 @@
-import { useModal } from 'context/ModalContext';
-import ModalChangePassword from '../ModalAdmin/ModalChangePassword';
-import ModalDeleteUser from '../ModalAdmin/ModalDeleteUser';
-import BasicModal from '../ModalAdmin/Modal';
-import ModalError from '../ModalAdmin/ModalError';
-import ShareModal from '../Modal/ShareModal/ShareModal';
-import AlarmModal from '../Modal/alarmModal/alarmModal';
+import { useModal } from "context/ModalContext";
+import ModalChangePassword from "../ModalAdmin/ModalChangePassword";
+import ModalDeleteUser from "../ModalAdmin/ModalDeleteUser";
+import BasicModal from "../ModalAdmin/Modal";
+import ModalError from "../ModalAdmin/ModalError";
+import ShareModal from "../Modal/ShareModal/ShareModal";
+import AlarmModal from "../Modal/AlarmModal/AlarmModal";
 
 export default function ModalManager() {
   const { modal, closeModal } = useModal();
 
   const renderModal = () => {
     switch (modal.type) {
-      case 'changePassword':
+      case "changePassword":
         return (
           <ModalChangePassword
             open
@@ -19,7 +19,7 @@ export default function ModalManager() {
             onSubmit={modal.props.onSubmit}
           />
         );
-      case 'deleteUser':
+      case "deleteUser":
         return (
           <ModalDeleteUser
             open
@@ -27,7 +27,7 @@ export default function ModalManager() {
             onConfirm={modal.props.onConfirm}
           />
         );
-      case 'createUser':
+      case "createUser":
         return (
           <BasicModal
             open
@@ -37,23 +37,19 @@ export default function ModalManager() {
             roles={modal.props.roles}
           />
         );
-      case 'error':
+      case "error":
         return (
-          <ModalError
-            open
-            onClose={closeModal}
-            error={modal.props.error}
-          />
+          <ModalError open onClose={closeModal} error={modal.props.error} />
         );
-      case 'share':
+      case "share":
         return (
           <ShareModal
             open
             onClose={closeModal}
             sessionId={modal.props.sessionId}
           />
-        )
-      case 'alarm':
+        );
+      case "alarm":
         return (
           <AlarmModal
             open
