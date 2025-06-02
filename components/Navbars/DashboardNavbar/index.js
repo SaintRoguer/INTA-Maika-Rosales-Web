@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 
 // react-router components
 import Link from 'next/link';
@@ -53,10 +53,22 @@ import {
   setOpenConfigurator,
 } from "context";
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
+  const [snackbar, setSnackbar] = useState({
+  open: false,
+  message: '',
+  severity: 'success'
+});
   const [openMenu, setOpenMenu] = useState(false);
   //Replace useLocation() with useRouter()
   const router = useRouter();
@@ -95,6 +107,43 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
 
+   const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({...snackbar, open: false});
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      const response = await fetch("/api/user/resetPassword", {
+        method: "POST",
+        credentials: 'include',
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSnackbar({
+          open: true,
+          message: data.message,
+          severity: 'success'
+        });
+        if (data.link) {
+          console.log('Reset link (dev only):', data.link);
+        }
+      } else {
+        throw new Error(data.error || "Failed to send reset email");
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message,
+        severity: 'error'
+      });
+    }
+  };
+
   const handleLogout = async () => {
     try {
       // Send a POST request to the logout API endpoint
@@ -130,7 +179,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-        <NotificationItem icon={<Icon>logout</Icon>} title="Cerrar sesión" onClick={handleLogout}/>
+      <NotificationItem icon={<Icon>key</Icon>} title="Cambiar contraseña" onClick={handleResetPassword}/>
+      <NotificationItem icon={<Icon>logout</Icon>} title="Cerrar sesión" onClick={handleLogout}/>
     </Menu>
   );
 
@@ -148,6 +198,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   });
 
   return (
+    <>
     <AppBar
       position={absolute ? "absolute" : navbarType}
       color="inherit"
@@ -198,7 +249,23 @@ function DashboardNavbar({ absolute, light, isMini }) {
         )}
       </Toolbar>
     </AppBar>
+      <Snackbar
+      open={snackbar.open}
+      autoHideDuration={6000}
+      onClose={handleCloseSnackbar}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
+      <Alert 
+        onClose={handleCloseSnackbar} 
+        severity={snackbar.severity}
+        sx={{ width: '100%' }}
+      >
+        {snackbar.message}
+      </Alert>
+    </Snackbar>
+    </>
   );
+  
 }
 
 // Setting default values for the props of DashboardNavbar
