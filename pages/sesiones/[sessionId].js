@@ -29,12 +29,10 @@ function SessionDetail() {
   const [showNotes, setShowNotes] = useState(false);
   const [notesData, setNotesData] = useState([]);
 
-  // Fetch session details using SWR
   const { data: sessionDetails, error: sessionError } = useSWR(
     sessionId ? `/api/sessionDetails/${sessionId}` : null
   );
   
-  // Fetch lotes details using SWR (only after sessionDetails is available)
   const { data: dataLotes, error: errorLotes } = useSWR(
     sessionDetails ? `/api/lotesDetails/${sessionDetails.refID}` : null,
     !showNotes ? { refreshInterval: 1000 } : { refreshInterval: 200000 }
@@ -43,7 +41,6 @@ function SessionDetail() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
-  // Loading states
   if (!sessionId || router.isFallback) return <h3>Cargando...</h3>;
   if (sessionError) return <h3>Error: {sessionError.message}</h3>;
   if (!sessionDetails) return <h3>Cargando sesión...</h3>;
@@ -69,7 +66,6 @@ function SessionDetail() {
         </>
       );
     } else {
-      //La sesión no tiene lotes
       return (
         <GridItem xs={12} sm={12} md={12}>
           <MDTypography component="div" variant="h4" color= {darkMode? "white" : "dark" } >  
@@ -93,7 +89,6 @@ function SessionDetail() {
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12} style={{ marginBottom: 20 }}>
-    
           <Card style={{backgroundColor: darkMode ? "#1f283e" :'#42424a'}}>
                 <MDBox sx={{ display: "flex", pr:"0.5rem", pt:"0.5rem", pl:"0.5rem", flexDirection: 'row', flexGrow: 1,}}> 
                   <MDBox 

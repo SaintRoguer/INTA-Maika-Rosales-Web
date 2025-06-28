@@ -4,7 +4,6 @@ import ActiveLink from 'components/ActiveLink';
 
 import { useRouter } from 'next/router';
 
-
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
 
@@ -32,6 +31,7 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
+
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
@@ -63,7 +63,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
 
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
+  const renderRoutes =  routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
     let returnValue;
     if (type === "collapse") {
       returnValue = href ? (
