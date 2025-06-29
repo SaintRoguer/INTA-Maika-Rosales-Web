@@ -88,24 +88,26 @@ function Sesiones({}) {
                       justifyContent="space-around"
                       sx={{ display: "flex",flexDirection: 'row', pr:"0.5rem", pt:"0.5rem", minWidth:"400px"}}
                     >
-                      <MDButton       
-                        target="_blank"
-                        rel="noreferrer"
-                        color="success"
-                        variant="outlined"
-                        size="small"
-                        sx={{ whiteSpace: 'nowrap', minWidth:"max-content", }}
-                      >
-                      <Icon fontSize="small" color="success" >
-                        article
-                      </Icon>
-                      <MDTypography component="div" color="success"  sx={{ fontSize: 16}} >
-                        Descargar CSV
-                      </MDTypography>
-                                    
-                      </MDButton>
+                      <CSVLink {...formatCsvDataAllSessions(data)} sx={{marginRight:"auto"}} >
+                        <MDButton       
+                          target="_blank"
+                          rel="noreferrer"
+                          color="success"
+                          variant="outlined"
+                          size="small"
+                          sx={{ whiteSpace: 'nowrap', minWidth:"max-content", }}
+                        >
+                        <Icon fontSize="small" color="success" >
+                          article
+                        </Icon>
+                        <MDTypography component="div" color="success"  sx={{ fontSize: 16}} >
+                          Descargar CSV
+                        </MDTypography>
+                                      
+                        </MDButton>
+                      </CSVLink>
                     <MDButton
-                        onClick={() => generatePdf(dataLotes)}
+                        onClick={() => generatePdf(data.sessions)}
                         target="_blank"
                         rel="noreferrer"
                         color="error"
