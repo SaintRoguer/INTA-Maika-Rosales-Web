@@ -92,10 +92,14 @@ export default function CustomTable(props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
-        addUserToTable(formData);
-        reset(); // Reset form fields
+        const responseData = await response.json();
+        const userWithUid = {
+          ...formData,          
+          uid: responseData.uid
+        };
+        addUserToTable(userWithUid);
+        reset(); 
         closeModal();
       } else {
         const errorData = await response.json();
