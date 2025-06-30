@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -15,12 +15,14 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditionModal from "../Modal/EditionModal";
 import moment from "moment";
 import "moment/locale/es";
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
 
-const PREFIX = 'PasturaInfo';
+const PREFIX = "PasturaInfo";
 
 const classes = {
   cardCategoryWhite: `${PREFIX}-cardCategoryWhite`,
-  cardTitleWhite: `${PREFIX}-cardTitleWhite`
+  cardTitleWhite: `${PREFIX}-cardTitleWhite`,
 };
 
 const StyledGridItem = styled(GridItem)({
@@ -49,44 +51,94 @@ export default function PasturaInfo(props) {
   const [showAverage, setShowAverage] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
-
-
   async function handleEditPastura(newPasturaDescription) {
     setShowEditModal(false);
     await updatePastura(pasturaDetailId, newPasturaDescription);
     //TODO: Spinner?
   }
 
+  // const cardHeader = () => {
+  //   return (
+  //     <CardHeader color="primary">
+  //       <div style={{ display: "flex", justifyContent: "space-between" }}>
+  //         <h4 className={classes.cardTitleWhite}>
+  //           {data.description} - Creada a las{" "}
+  //           {moment(
+  //             new Date(data.creationDate._seconds * 1000),
+  //             "dd/mm/yyyy"
+  //           ).format("HH:mm")}{" "}
+  //           hs{" "}
+  //         </h4>
+  //         {isMinimized ? (
+  //           <ArrowDownwardIcon onClick={() => setIsMinimized(false)} />
+  //         ) : (
+  //           <div style={{ display: "flex" }}>
+  //             <EditIcon
+  //               onClick={() => {
+  //                 setShowEditModal(true);
+  //               }}
+  //             />
+  //             <ArrowUpwardIcon
+  //               onClick={() => {
+  //                 setIsMinimized(true);
+  //               }}
+  //             />
+  //           </div>
+  //         )}
+  //       </div>
+  //     </CardHeader>
+  //   );
+  // };
+
   const cardHeader = () => {
     return (
-      <CardHeader color="primary">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h4 className={classes.cardTitleWhite}>
+      <MDBox
+        mx={2}
+        mt={isMinimized ? "" : -3}
+        py={3}
+        px={2}
+        mb={1}
+        variant="gradient"
+        bgColor="dark"
+        borderRadius="lg"
+        coloredShadow="dark"
+        sx={{
+          flexGrow: 1,
+          direction: "row",
+          minWidth: isMinimized ? "300px" : "",
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <MDTypography
+            color="white"
+            fontSize="15px"
+            fontWeight="bold"
+            sx={{ flexGrow: 1 }}
+          >
             {data.description} - Creada a las{" "}
             {moment(
               new Date(data.creationDate._seconds * 1000),
               "dd/mm/yyyy"
             ).format("HH:mm")}{" "}
-            hs{" "}
-          </h4>
-          {isMinimized ? (
-            <ArrowDownwardIcon onClick={() => setIsMinimized(false)} />
-          ) : (
-            <div style={{ display: "flex" }}>
-              <EditIcon
-                onClick={() => {
-                  setShowEditModal(true);
-                }}
-              />
-              <ArrowUpwardIcon
-                onClick={() => {
-                  setIsMinimized(true);
-                }}
-              />
-            </div>
-          )}
+            hs
+          </MDTypography>
+          <MDTypography
+            color="white"
+            fontSize="15px"
+            fontWeight="bold"
+            justifySelf="flex-end"
+          >
+            {isMinimized ? (
+              <ArrowDownwardIcon onClick={() => setIsMinimized(false)} />
+            ) : (
+              <div style={{ display: "flex" }}>
+                <EditIcon onClick={() => setShowEditModal(true)} />
+                <ArrowUpwardIcon onClick={() => setIsMinimized(true)} />
+              </div>
+            )}
+          </MDTypography>
         </div>
-      </CardHeader>
+      </MDBox>
     );
   };
 

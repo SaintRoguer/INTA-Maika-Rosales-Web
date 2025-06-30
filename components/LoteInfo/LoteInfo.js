@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "@mui/material/Card";
 import CardBody from "@mui/material/Card";
@@ -22,21 +22,18 @@ import Alarms from "./Alarms/Alarms";
 
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import {
-  useMaterialUIController,
-} from "context";
+import { useMaterialUIController } from "context";
 import { Tooltip } from "@mui/material";
 
-
-const PREFIX = 'LoteInfo';
+const PREFIX = "LoteInfo";
 
 const classes = {
   cardCategoryWhite: `${PREFIX}-cardCategoryWhite`,
-  cardTitleWhite: `${PREFIX}-cardTitleWhite`
+  cardTitleWhite: `${PREFIX}-cardTitleWhite`,
 };
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')({
+const Root = styled("div")({
   [`& .${classes.cardCategoryWhite}`]: {
     color: "rgb(239,219,46)",
     margin: "0",
@@ -63,13 +60,9 @@ export default function LoteInfo(props) {
   const [showHelp, setShowHelp] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  
+
   const [controller, dispatch] = useMaterialUIController();
-  const {
-    darkMode,
-  } = controller;
-
-
+  const { darkMode } = controller;
 
   async function handleEditLote(newLoteDescription) {
     setShowEditModal(false);
@@ -94,67 +87,74 @@ export default function LoteInfo(props) {
   };
 
   const editDescription = () => {
-    return (
-      permission === "Editor" || permission === undefined ? (
-        <EditIcon
-                onClick={() => {
-                  setShowEditModal(true);
-                }}
-              />
-      ) : (
-        <Tooltip title="No tienes permiso para editar la descripción del lote">
-          <EditIcon
-            disabled
-            color="black"        
-          />
-        </Tooltip>
-      )
-    )}
+    return permission === "Editor" || permission === undefined ? (
+      <EditIcon
+        onClick={() => {
+          setShowEditModal(true);
+        }}
+      />
+    ) : (
+      <Tooltip title="No tienes permiso para editar la descripción del lote">
+        <EditIcon disabled color="black" />
+      </Tooltip>
+    );
+  };
 
   const cardHeader = () => {
     return (
       <MDBox
-                mx={2}
-                mt={isMinimized ? "" :-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="dark"
-                borderRadius="lg"
-                coloredShadow="dark"
-                sx={{flexGrow: 1,direction:"row",minWidth:isMinimized ? "300px" : "" }}
-              >
-        <div style={{ display: "flex"}}>
-          <MDTypography color= "white"  fontSize="15px" fontWeight="bold" direction="row"   sx={{flexGrow: 1,direction:"row",}}>  
-
-              {loteData.description} - Creado a las{" "}
-              {moment(
-                new Date(loteData.creationDate._seconds * 1000),
-                "dd/mm/yyyy"
-              ).format("HH:mm")}{" "}
-              hs
-                                  
+        mx={2}
+        mt={isMinimized ? "" : -3}
+        py={3}
+        px={2}
+        mb={1}
+        variant="gradient"
+        bgColor="dark"
+        borderRadius="lg"
+        coloredShadow="dark"
+        sx={{
+          flexGrow: 1,
+          direction: "row",
+          minWidth: isMinimized ? "300px" : "",
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <MDTypography
+            color="white"
+            fontSize="15px"
+            fontWeight="bold"
+            direction="row"
+            sx={{ flexGrow: 1, direction: "row" }}
+          >
+            {loteData.description} - Creado a las{" "}
+            {moment(
+              new Date(loteData.creationDate._seconds * 1000),
+              "dd/mm/yyyy"
+            ).format("HH:mm")}{" "}
+            hs
           </MDTypography>
-          <MDTypography color= "white"  fontSize="15px" fontWeight="bold" justifySelf="flex-end"
-          >  
-             {isMinimized ? (
-            <div style={{ display: "flex" }}>
-              {editDescription()}
-              <ArrowDownwardIcon onClick={() => setIsMinimized(false)} />
-            </div>
-          ) : (
-            <div style={{ display: "flex" }}>
-              {editDescription()}
-              <ArrowUpwardIcon
-                onClick={() => {
-                  setIsMinimized(true);
-                }}
-              />
-            </div>
-          )}
+          <MDTypography
+            color="white"
+            fontSize="15px"
+            fontWeight="bold"
+            justifySelf="flex-end"
+          >
+            {isMinimized ? (
+              <div style={{ display: "flex" }}>
+                {editDescription()}
+                <ArrowDownwardIcon onClick={() => setIsMinimized(false)} />
+              </div>
+            ) : (
+              <div style={{ display: "flex" }}>
+                {editDescription()}
+                <ArrowUpwardIcon
+                  onClick={() => {
+                    setIsMinimized(true);
+                  }}
+                />
+              </div>
+            )}
           </MDTypography>
-
-
         </div>
       </MDBox>
     );
@@ -177,29 +177,33 @@ export default function LoteInfo(props) {
   const showContent = () => {
     if (isMinimized) {
       return (
-        (<>
-          <GridItem xs={12} sm={12} md={6} sx={{mb:"10px"}}>
+        <>
+          <GridItem xs={12} sm={12} md={6} sx={{ mb: "10px" }}>
             {cardHeader()}
           </GridItem>
           <GridItem xs={12} sm={12} md={6}></GridItem>
           {loteEditionModal()}
-        </>)
+        </>
       );
     } else {
       return (
         <>
           <GridItem xs={12} sm={12} md={6}>
-            <Card sx={{mt:"30px", mb:"30px"}} >
+            <Card sx={{ mt: "30px", mb: "30px" }}>
               {cardHeader()}
               <GridItem xs={12} sm={12} md={12}>
-                <MDTypography color={ darkMode ? "white" :"dark"}  fontSize="12px" fontWeight="bold" justifySelf="flex-end">
-              
-                    <strong>{loteData.images.length} imágenes</strong> y{" "}
-                    <strong>{loteData.pasturas.length} pasturas</strong> asociadas
+                <MDTypography
+                  color={darkMode ? "white" : "dark"}
+                  fontSize="12px"
+                  fontWeight="bold"
+                  justifySelf="flex-end"
+                >
+                  <strong>{loteData.images.length} imágenes</strong> y{" "}
+                  <strong>{loteData.pasturas.length} pasturas</strong> asociadas
                 </MDTypography>
               </GridItem>
 
-              <Card sx={{pl:"20px", pr:"20px", pt:"20px", pb:"20px"}}>
+              <Card sx={{ pl: "20px", pr: "20px", pt: "20px", pb: "20px" }}>
                 <CustomTabs
                   title="Ver:"
                   headerColor="dark"
@@ -241,8 +245,13 @@ export default function LoteInfo(props) {
                   ]}
                 />
               </Card>
-              <Card sx={{pl:"20px", pr:"20px", pt:"20px", pb:"20px"}}>
-                <MDTypography color={ darkMode ? "white" :"dark"}  fontSize="12px" fontWeight="bold" justifySelf="flex-end">
+              <Card sx={{ pl: "20px", pr: "20px", pt: "20px", pb: "20px" }}>
+                <MDTypography
+                  color={darkMode ? "white" : "dark"}
+                  fontSize="12px"
+                  fontWeight="bold"
+                  justifySelf="flex-end"
+                >
                   <strong>Alarmas</strong>
                 </MDTypography>
                 <Alarms
@@ -260,7 +269,10 @@ export default function LoteInfo(props) {
           </GridItem>
           <GridItem xs={12} sm={12} md={6}>
             {showHelp ? (
-              <MDTypography color={ darkMode ? "white" :"dark"} sx={{fontSize:"16.6px"}}>
+              <MDTypography
+                color={darkMode ? "white" : "dark"}
+                sx={{ fontSize: "16.6px" }}
+              >
                 <strong>{loteData.description} </strong> - Seleccioná una imágen
                 para mostrar su información
               </MDTypography>
