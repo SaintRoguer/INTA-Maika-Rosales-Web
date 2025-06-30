@@ -8,8 +8,8 @@ export default async function handler(req, res) {
   const { name, email, password, role } = req.body;
 
   try {
-    await createNewUser(name, email, password, role);
-    return res.status(200).json({ message: "User created successfully" });
+    const response = await createNewUser(name, email, password, role);
+    return res.status(200).json({ message: "User created successfully", uid: response });
   } catch (error) {
     console.error("Error creating user:", error);
     return res.status(409).json({ error: " " +error });
